@@ -15,7 +15,8 @@ Commits shall be written after conventions from [Conventional Commits](https://w
  - refactor for code refactors
  - perf for perfomance improvements 
  - test for testing commits
- - org for commits needed by University
+ - build for modification of the build system
+ - org for commits needed for organization of the project
  
 This means commits have to follow this syntax:
 ```
