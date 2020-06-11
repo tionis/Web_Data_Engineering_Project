@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset= "utf-8">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <title>Eventplanungssystem</title>
+    </head>
+    <body>
+
+        <!-- Site Container -->
+        <div class="container">
+
+            <!-- Searchbar and Add_Event_Button -->
+            <div class="row pt-5 pb-5">
+
+                <!-- Searchbar -->
+                <div class="col-8">
+                    <input class="form-control form-control-lg bg-light" type="search" name="search" placeholder="Suchen...">
+                </div>
+
+                <!-- Add_Event_Button -->
+                <div class="col-4 text-right">
+                    <button class="btn btn-primary btn-block btn-lg" type="button" name="add_event">Event hinzufügen</button>
+                </div>
+            </div>
+
+            <!-- Last and Top Events -->
+            <div class="row ">
+
+                <!-- Top Events -->
+                <div class="col-md-4 order-md-2">
+                    <h2 class="pb-2">Top Events</h2>
+
+                    <!-- Container for Events -->
+                    <div class="card_container mt-4 mb-4">
+
+                        <!-- Demo Event -->
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <h4 class="text-danger">#1</h4>
+                                    <h5>Name</h5>
+                                </div>
+                                <div class="card-text">
+                                    <p>Datum: 22.06.2020</p>
+                                    <p>Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Events -->
+                <div class="col-md-8 order-md-1">
+                    <h2 class="pb-2">Zuletzt hinzugefügt</h2>
+
+                    <!-- Filter for last Events -->
+                    <select class="form-control" name="filter">
+
+                    </select>
+
+                    <!-- Container for Events -->
+                    <div class="card_container mt-4 mb-4">
+
+                        <!-- Demo Event -->
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <h5>Name</h5>
+                                </div>
+                                <div class="card-text">
+                                    <p>Datum: 22.06.2020</p>
+                                    <p>Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
