@@ -3,20 +3,33 @@ This project is required to follow the [Gitflow Workflow](https://www.atlassian.
 as such the master branch is only used for releases and is protected.  
 Development happens mainly on the develop and specific feature branches.  
 Hotfix branches are part of the spec, but will not be used as this code never moves into production.  
-Nevertheless release tags shall be used when appropiate.
+Nevertheless, release tags shall be used when appropriate.
 
-# Commit Template
+
+# Naming Conventions
+## Branch Template
+Branches should(next to the master and develop branch) follow this naming convention: type/descriptor  
+
+Following types can be used:
+ - feat: Feature I'm adding or expanding
+ - fix: Bug fix or experiment
+ - wip: Works in progress; stuff I know won't be finished soon
+ - junk: Throwaway branch created to experiment
+ 
+The descriptor can be any valid git branch name, as long as it is short and descriptive.
+
+## Commit Template
 Commits shall be written after conventions from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) with following types:
- - fix for bug fixes
- - feat for added features
- - docs for documentation
- - chore for housekeeping
- - style for style improvements
- - refactor for code refactors
- - perf for perfomance improvements 
- - test for testing commits
- - build for modification of the build system
- - org for commits needed for organization of the project
+ - fix: bug fixes
+ - feat: added features
+ - docs: documentation
+ - chore: housekeeping
+ - style: style improvements
+ - refactor: code refactors
+ - perf: perfomance improvements 
+ - test: testing commits
+ - build: modification of the build system
+ - org: commits needed for organization of the project
  
 This means commits have to follow this syntax:
 ```
