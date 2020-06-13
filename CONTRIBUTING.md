@@ -26,7 +26,7 @@ Commits shall be written after conventions from [Conventional Commits](https://w
  - chore: housekeeping
  - style: style improvements
  - refactor: code refactors
- - perf: perfomance improvements 
+ - perf: performance improvements 
  - test: testing commits
  - build: modification of the build system
  - org: commits needed for organization of the project
