@@ -37,7 +37,10 @@
                     <form class="mt-4">
                         <div class="form-group">
                             <label for="eventType">Typ</label>
-                            <select class="form-control" id="eventType">
+
+                            <!-- Fragment for type selection -->
+                            <select th:fragment="typeSelect" class="form-control" id="eventType">
+                                <option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
                             </select>
                         </div>
 
