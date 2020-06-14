@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset= "utf-8">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <title>Event hinzufügen</title>
+    </head>
+    <body>
+
+        <!-- Site Container -->
+        <div class="container">
+
+            <!-- Backbutton -->
+            <div class="row pt-5 pb-5">
+                <div class="col">
+                    <button class="btn btn-link p-0" type="button">&larr; zurück zur Startseite</button>
+                </div>
+
+            </div>
+
+            <!-- Subtitle -->
+            <div class="row">
+                <div class="col">
+                    <h2>Event hinzufügen</h2>
+                </div>
+
+            </div>
+
+            <!-- Form Container -->
+            <div class="row">
+                <div class="col">
+
+                    <!-- Form -->
+                    <form class="mt-4">
+                        <div class="form-group">
+                            <label for="eventType">Typ</label>
+                            <select class="form-control" id="eventType">
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventName">Name</label>
+                            <input type="text" class="form-control" id="eventName">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDescription">Beschreibung</label>
+                            <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDate">Datum</label>
+                            <input class="form-control" type="date" id="eventDate" value="2020-06-11" min="2020-06-05">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventLocation">Ort</label>
+                            <input type="text" class="form-control mb-2" id="eventLocation" placeholder="Stadt">
+                            <div class="form-row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="longitude" placeholder="Längengrad">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="latitude" placeholder="Breitengrad">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block mt-5">Hinzufügen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
