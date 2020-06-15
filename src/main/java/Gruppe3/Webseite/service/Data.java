@@ -1,8 +1,10 @@
 package Gruppe3.Webseite.service;
 
 import Gruppe3.Webseite.model.Event;
+import org.springframework.stereotype.Service;
 
-public class data {
+@Service
+public class Data {
     /**
      * Return the currently initialized types of events.
      *

@@ -6,7 +6,8 @@ public class Event {
 
     private final String type;
     private final String location;
-    private final Date date; // Use ISO 8601
+    private final Date date;
+    private final Date creationDate;
     private final String name;
     private final String description;
     private int dislikes;
@@ -18,6 +19,7 @@ public class Event {
         this.date = date;
         this.name = name;
         this.description = description;
+        this.creationDate = new Date();
         dislikes = 0;
         likes = 0;
     }
@@ -34,6 +36,8 @@ public class Event {
         return date;
     }
 
+    public Date getCreationDate(){ return creationDate;}
+
     public String getName() {
         return name;
     }
@@ -46,7 +50,7 @@ public class Event {
         return likes;
     }
 
-    public int getDisLikes() {
+    public int getDislikes() {
         return dislikes;
     }
 }
