@@ -39,8 +39,8 @@
                             <label for="eventType">Typ</label>
 
                             <!-- Fragment for type selection -->
-                            <select th:fragment="typeSelect" class="form-control" id="eventType">
-                                <option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
+                            <select class="form-control" id="eventType">
+                                <option th:fragment="typeOptions" th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
                             </select>
                         </div>
 
