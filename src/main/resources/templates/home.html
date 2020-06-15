@@ -35,7 +35,7 @@
                     <h2 class="pb-2">Top Events</h2>
 
                     <!-- Container for Events -->
-                    <div class="card_container mt-4 mb-4">
+                    <div class="cardContainer mt-4 mb-4">
 
                         <!-- Demo Event -->
                         <div class="card bg-light">
@@ -65,18 +65,17 @@
                         <option th:replace="add_event.html :: typeOptions" value=""></option>
                     </select>
 
-                    <!-- Container for Events -->
-                    <div class="card_container mt-4 mb-4">
-
-                        <!-- Demo Event -->
-                        <div class="card bg-light">
+                    <!-- Container fragment for events -->
+                    <div th:fragment="eventContainer" class="cardContainer mt-4 mb-4">
+                        <div th:each="event : ${events}" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
-                                    <h5>Name</h5>
+                                    <h4 th:if="${event.rank < 4}" th:text="'# ' + ${event.rank}" class="text-danger"></h4>
+                                    <h5 th:text="${event.name}">Name</h5>
                                 </div>
                                 <div class="card-text">
-                                    <p>Datum: 22.06.2020</p>
-                                    <p>Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p th:text="${#dates.formatISO(event.date)}">Datum: 22.06.2020</p>
+                                    <p th:text="${event.description}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                 </div>
                             </div>
                         </div>
