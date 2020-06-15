@@ -2,10 +2,12 @@ package Gruppe3.Webseite.service;
 
 import Gruppe3.Webseite.model.Event;
 import org.springframework.stereotype.Service;
+import java.util.Date;
+
 
 @Service
 public class Data {
-    /**
+ /**
      * Return the currently initialized types of events.
      *
      * @return List of Types
@@ -63,7 +65,7 @@ public class Data {
      *
      * @return name exists
      */
-    public boolean nameTaken() {
+    public boolean nameTaken(String name) {
         // TODO
         return false;
     }
@@ -82,7 +84,7 @@ public class Data {
      *
      * @param name Name of event
      */
-    public void addLike(String name) {
+    public void addLike(String name) throws NoSuchEvent {
         // TODO
     }
 
@@ -91,7 +93,7 @@ public class Data {
      *
      * @param name Name of the event
      */
-    public void removeLike(String name) {
+    public void removeLike(String name) throws NoSuchEvent {
         // TODO
     }
 
@@ -100,7 +102,7 @@ public class Data {
      *
      * @param name Name of event
      */
-    public void addDislike(String name) {
+    public void addDislike(String name) throws NoSuchEvent {
         // TODO
     }
 
@@ -109,17 +111,33 @@ public class Data {
      *
      * @param name Name of the event
      */
-    public void removeDislike(String name) {
+    public void removeDislike(String name) throws NoSuchEvent {
         // TODO
     }
 
-    public int getLikeCount() {
-        // TODO
-        return 0;
+    /**
+     * Get Amount of likes for a given event by name
+     *
+     * @param name Name of Event
+     * @return Amount of likes
+     */
+    public int getLikeCount(String name) throws NoSuchEvent {
+        return getEventByName(name).getLikes();
     }
 
-    public int getDislikeCount() {
-        // TODO
-        return 0;
+    /**
+     * Get Amount of dislikes for a given event by name
+     *
+     * @param name Name of event
+     * @return Amount of Dislikes
+     */
+    public int getDislikeCount(String name) throws NoSuchEvent {
+        return getEventByName(name).getDislikes();
+    }
+
+    //Package Private Methods
+    Event getEventByName(String name) throws NoSuchEvent {
+        //TODO
+        return new Event("", "", new Date(), "", "");
     }
 }
