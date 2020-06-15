@@ -57,8 +57,12 @@
                 <div class="col-md-8 order-md-1">
                     <h2 class="pb-2">Zuletzt hinzugefügt</h2>
 
-                    <!-- Filter for last Events ("add_event.html fragment" -> model attributename must be "types") -->
-                    <select th:replace="add_event.html :: typeSelect" class="form-control" name="filter">
+                    <!-- Filter for last Events -->
+                    <select class="form-control" name="filter">
+                        <option value="Alle">Alle</option>
+
+                        <!-- "add_event.html fragment" -> model attributename must be "types" -->
+                        <option th:replace="add_event.html :: typeOptions" value=""></option>
                     </select>
 
                     <!-- Container for Events -->
