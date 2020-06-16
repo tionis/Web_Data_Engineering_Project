@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="card-text">
                                     <p th:text="${#dates.formatISO(event.date)}">Datum: 22.06.2020</p>
-                                    <p th:text="${event.description}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p th:text="${#strings.abbreviate(event.description, 150)}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                 </div>
                             </div>
                         </div>
