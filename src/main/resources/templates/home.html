@@ -36,7 +36,9 @@
 
                 <!-- Searchbar -->
                 <div class="col-8">
-                    <input class="form-control form-control-lg bg-light" type="search" name="search" placeholder="Suchen...">
+                    <form action="localhost:8080/search" method="get">
+                        <input class="form-control form-control-lg bg-light" type="search" name="query" placeholder="Suchen...">
+                    </form>
                 </div>
 
                 <!-- Add_Event_Button -->
