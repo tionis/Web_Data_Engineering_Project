@@ -5,25 +5,26 @@ import java.util.Date;
 public final class Event {
 
     /**
+     * Name of the event.
+     */
+    private final String name;
+    /**
      * Type of event this is.
      */
     private final String type;
     /**
-     * Location where the event takes place.
+     * Location where the event takes place, this is either a place name or
+     * coordinates in the ISO 6709 format.
      */
     private final String location;
     /**
      * Date the event starts.
      */
-    private final Date date;
+    private final Date startDate;
     /**
      * Date the event was created.
      */
     private final Date creationDate;
-    /**
-     * Name of the event.
-     */
-    private final String name;
     /**
      * Full Description of the event.
      */
@@ -42,15 +43,15 @@ public final class Event {
      *
      * @param type        Type of event to create
      * @param location    Location of the created event
-     * @param date        Date the event starts
+     * @param startDate   Date the event starts
      * @param name        Name of the Event
      * @param description Full description for the event
      */
-    public Event(final String type, final String location, final Date date,
+    public Event(final String type, final String location, final Date startDate,
                  final String name, final String description) {
         this.type = type;
         this.location = location;
-        this.date = date;
+        this.startDate = startDate;
         this.name = name;
         this.description = description;
         this.creationDate = new Date();
@@ -66,8 +67,8 @@ public final class Event {
         return location;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
     }
 
     public Date getCreationDate() {
