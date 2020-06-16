@@ -1,6 +1,7 @@
 package Gruppe3.Webseite.service;
 
 import Gruppe3.Webseite.model.Event;
+import Gruppe3.Webseite.model.Vote;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 
@@ -81,39 +82,31 @@ public class Data {
     }
 
     /**
-     * Add Like to a given event by name
+     * Apply Vote Addition to data store
      *
-     * @param name Name of event
+     * @param vote Vote to add
      */
-    public void addLike(String name) throws NoSuchEvent {
-        // TODO
+    public void addVote(Vote vote) throws NoSuchEvent {
+        //TODO
+        if (vote.getIsLike()) {
+
+        } else {
+
+        }
     }
 
     /**
-     * Remove Like to a given event by name
+     * Apply Vote Removal to data store
      *
-     * @param name Name of the event
+     * @param vote Vote to remove
      */
-    public void removeLike(String name) throws NoSuchEvent {
-        // TODO
-    }
+    public void removeVote(Vote vote) throws NoSuchEvent {
+        //TODO
+        if (vote.getIsLike()) {
 
-    /**
-     * Add Dislike to a given event by name
-     *
-     * @param name Name of event
-     */
-    public void addDislike(String name) throws NoSuchEvent {
-        // TODO
-    }
+        } else {
 
-    /**
-     * Remove Dislike to a given event by name
-     *
-     * @param name Name of the event
-     */
-    public void removeDislike(String name) throws NoSuchEvent {
-        // TODO
+        }
     }
 
     /**
@@ -136,8 +129,14 @@ public class Data {
         return getEventByName(name).getDislikes();
     }
 
-    //Package Private Methods
-    Event getEventByName(String name) throws NoSuchEvent {
+    /**
+     * Get an event by specifying its name
+     *
+     * @param name Name of the event
+     * @return Event with given name
+     * @throws NoSuchEvent No event with given name found
+     */
+    public Event getEventByName(String name) throws NoSuchEvent {
         //TODO
         return new Event("", "", new Date(), "", "");
     }
