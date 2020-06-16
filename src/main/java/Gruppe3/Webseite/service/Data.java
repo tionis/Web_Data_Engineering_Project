@@ -3,18 +3,20 @@ package Gruppe3.Webseite.service;
 import Gruppe3.Webseite.model.Event;
 import Gruppe3.Webseite.model.Vote;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 
 
 @Service
 public class Data {
- /**
+    /**
      * Return the currently initialized types of events.
      *
      * @return List of Types
      */
     public String[] getTypes() {
         // TODO
+        // get array from initialization(maybe save in database?)
         return new String[]{};
     }
 
@@ -25,7 +27,8 @@ public class Data {
      * @return List of events
      */
     public Event[] getLastEvents(int n) {
-        //TODO
+        // TODO
+        // SELECT * FROM events ORDER BY creation_date DESC LIMIT n;
         return new Event[]{};
     }
 
@@ -36,6 +39,8 @@ public class Data {
      */
     public Event[] getTopEvents(int n) {
         // TODO
+        // SQL query that sorts by vote and takes the top n ones:
+        // SELECT * FROM events ORDER BY (likes-dislikes) DESC LIMIT n;
         return new Event[]{};
     }
 
@@ -47,6 +52,7 @@ public class Data {
      */
     public Event[] searchForEventAfterName(String query) {
         // TODO
+        // sql search?
         return new Event[]{};
     }
 
@@ -58,17 +64,8 @@ public class Data {
      */
     public Event[] searchForEventAfterLocation(String query) {
         // TODO
+        // sql search?
         return new Event[]{};
-    }
-
-    /**
-     * Checks whether an event with given name already exists
-     *
-     * @return name exists
-     */
-    public boolean nameTaken(String name) {
-        // TODO
-        return false;
     }
 
     /**
@@ -77,7 +74,7 @@ public class Data {
      * @param eventToSave Event to add to database
      */
     public void saveEvent(Event eventToSave) {
-        // TODO Error throwing here?
+        // sql query to add to table
     }
 
     /**
@@ -88,9 +85,9 @@ public class Data {
     public void addVote(Vote vote) throws NoSuchEvent {
         //TODO
         if (vote.getIsLike()) {
-
+            // Update event in database
         } else {
-
+            // Update event in database
         }
     }
 
@@ -102,9 +99,9 @@ public class Data {
     public void removeVote(Vote vote) throws NoSuchEvent {
         //TODO
         if (vote.getIsLike()) {
-
+            // Update event in database
         } else {
-
+            // Updare event in database
         }
     }
 
@@ -115,6 +112,7 @@ public class Data {
      * @return Amount of likes
      */
     public int getLikeCount(String name) throws NoSuchEvent {
+        // Is this efficient enough?
         return getEventByName(name).getLikes();
     }
 
@@ -125,6 +123,7 @@ public class Data {
      * @return Amount of Dislikes
      */
     public int getDislikeCount(String name) throws NoSuchEvent {
+        // Is this efficient enough?
         return getEventByName(name).getDislikes();
     }
 
@@ -136,7 +135,13 @@ public class Data {
      * @throws NoSuchEvent No event with given name found
      */
     public Event getEventByName(String name) throws NoSuchEvent {
-        //TODO
-        return new Event("", "", new Date(), "", "");
+        if (name != null && !name.isEmpty()){
+            //TODO
+            // SQl query for specific name:
+            // SELECT * FROM events WHERE name = 'test'
+            return new Event(name, "", new Date(), "", "");
+        }else{
+            throw new NoSuchEvent("Empty Name");
+        }
     }
 }
