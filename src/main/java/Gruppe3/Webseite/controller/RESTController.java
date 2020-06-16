@@ -12,26 +12,30 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RESTController {
 
+    /**
+     * Data object to connect to data store.
+     */
     private final Data data;
 
     /**
-     * Constructs a WebseiteController
+     * Constructs a RESTController.
      *
      * @param data The data object for service methods
      */
     @Autowired
-    public RESTController(Data data) {
+    public RESTController(final Data data) {
         this.data = data;
     }
 
     /**
-     * Returns the last n events
+     * Returns the last n events.
      *
      * @param countString The event count to return as string
      * @return Events wrapped in response
      */
     @GetMapping("/api/events")
-    public ResponseEntity<Event[]> events(@RequestParam(value = "n", defaultValue = "20") String countString) {
+    public ResponseEntity<Event[]> events(
+            @RequestParam(value = "n", defaultValue = "20") final String countString) {
         int count;
         try {
             count = Integer.parseInt(countString);
@@ -42,13 +46,14 @@ public class RESTController {
     }
 
     /**
-     * Returns the specified event
+     * Returns the specified event.
      *
      * @param eventName The event count to return as string
      * @return Event wrapped in response
      */
     @GetMapping("/api/event")
-    public ResponseEntity<Event> event(@RequestParam(value = "name") String eventName) {
+    public ResponseEntity<Event> event(
+            @RequestParam(value = "name") final String eventName) {
         try {
             return ResponseEntity.ok(data.getEventByName(eventName));
         } catch (NoSuchEvent e) {
@@ -57,11 +62,13 @@ public class RESTController {
     }
 
     /**
-     * @param vote Vote to apply to datastore
+     * Handle API vote adding.
+     *
+     * @param vote Vote to apply to data store
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/vote/add")
-    public ResponseEntity<Event> addVote(@RequestBody Vote vote) {
+    public ResponseEntity<Event> addVote(@RequestBody final Vote vote) {
         try {
             data.addVote(vote);
             return ResponseEntity.ok(data.getEventByName(vote.getEventName()));
@@ -71,13 +78,13 @@ public class RESTController {
     }
 
     /**
-     * Remove Like for a given Event
+     * Handle API Vote Removal.
      *
-     * @param vote Vote to apply to datastore
+     * @param vote Vote to apply to data store
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/vote/remove")
-    public ResponseEntity<Event> removeVote(@RequestBody Vote vote) {
+    public ResponseEntity<Event> removeVote(@RequestBody final Vote vote) {
         try {
             data.removeVote(vote);
             return ResponseEntity.ok(data.getEventByName(vote.getEventName()));

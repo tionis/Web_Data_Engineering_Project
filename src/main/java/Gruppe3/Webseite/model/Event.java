@@ -2,18 +2,52 @@ package Gruppe3.Webseite.model;
 
 import java.util.Date;
 
-public class Event {
+public final class Event {
 
+    /**
+     * Type of event this is.
+     */
     private final String type;
+    /**
+     * Location where the event takes place.
+     */
     private final String location;
+    /**
+     * Date the event starts.
+     */
     private final Date date;
+    /**
+     * Date the event was created.
+     */
     private final Date creationDate;
+    /**
+     * Name of the event.
+     */
     private final String name;
+    /**
+     * Full Description of the event.
+     */
     private final String description;
-    private int dislikes;
-    private int likes;
+    /**
+     * Amount of Dislikes of this event.
+     */
+    private final int dislikes;
+    /**
+     * Amount of likes of this event.
+     */
+    private final int likes;
 
-    public Event(String type, String location, Date date, String name, String description) {
+    /**
+     * Create event by specifying all parameters but votes.
+     *
+     * @param type        Type of event to create
+     * @param location    Location of the created event
+     * @param date        Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String type, final String location, final Date date,
+                 final String name, final String description) {
         this.type = type;
         this.location = location;
         this.date = date;
@@ -36,7 +70,9 @@ public class Event {
         return date;
     }
 
-    public Date getCreationDate(){ return creationDate;}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
     public String getName() {
         return name;
