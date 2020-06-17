@@ -1,123 +1,90 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
+    <head>
+        <meta charset= "utf-8">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-          crossorigin="anonymous">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <!-- jQuery include -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-            crossorigin="anonymous"></script>
+        <!-- jQuery include -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <!-- Script for Website -->
-    <script type="text/javascript">
+        <!-- Script for Website -->
+        <script type="text/javascript">
         function validate() {
-            const location = document.forms["createEvent"]["eventLocation"].value;
-            const latitude = document.forms["createEvent"]["latitude"].value;
-            const longitude = document.forms["createEvent"]["longitude"].value;
-            if (location && (latitude || longitude)) {
-                alert("Please specify coordinates OR location name!")
-                return false;
-            }
-            let lat = parseFloat(latitude);
-            let long = parseFloat(longitude);
-            if (!(!isNaN(lat) && lat <= 90 && lat >= -90) && (!isNaN(long) && long <= 180 && long >= -180)) {
-                alert("Please specify valid coordinates!")
-                return false;
-            }
-            return true;
+            //TODO
         }
-    </script>
+        </script>
 
-    <title>Event hinzufügen</title>
-</head>
-<body>
+        <title>Event hinzufügen</title>
+    </head>
+    <body>
 
-<!-- Site Container -->
-<div class="container">
+        <!-- Site Container -->
+        <div class="container">
 
-    <!-- Backbutton -->
-    <div class="row pt-5 pb-5">
-        <div class="col">
-            <button class="btn btn-link p-0" type="button"
-                    onclick="location.href='http://localhost:8080';">&larr;
-                zurück zur Startseite
-            </button>
-        </div>
-
-    </div>
-
-    <!-- Subtitle -->
-    <div class="row">
-        <div class="col">
-            <h2>Event hinzufügen</h2>
-        </div>
-
-    </div>
-
-    <!-- Form Container -->
-    <div class="row">
-        <div class="col">
-
-            <!-- Form -->
-            <form class="mt-4" name="createEvent" onsubmit="return validate();">
-                <div class="form-group">
-                    <label for="eventType">Typ</label>
-
-                    <!-- Fragment for type selection -->
-                    <select class="form-control" name="eventType"
-                            id="eventType">
-                        <option th:fragment="typeOptions"
-                                th:each="type : ${types}" th:value="${type}"
-                                th:text="${type}"></option>
-                    </select>
+            <!-- Backbutton -->
+            <div class="row pt-5 pb-5">
+                <div class="col">
+                    <button class="btn btn-link p-0" type="button" onclick="location.href='http://localhost:8080';">&larr; zurück zur Startseite</button>
                 </div>
 
-                <div class="form-group">
-                    <label for="eventName">Name</label>
-                    <input type="text" class="form-control" id="eventName">
+            </div>
+
+            <!-- Subtitle -->
+            <div class="row">
+                <div class="col">
+                    <h2>Event hinzufügen</h2>
                 </div>
 
-                <div class="form-group">
-                    <label for="eventDescription">Beschreibung</label>
-                    <textarea class="form-control" id="eventDescription"
-                              rows="3"></textarea>
-                </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="eventDate">Datum</label>
-                    <input class="form-control" type="date" id="eventDate"
-                           value="2020-06-11" min="2020-06-05">
-                </div>
+            <!-- Form Container -->
+            <div class="row">
+                <div class="col">
 
-                <div class="form-group">
-                    <label for="eventLocation">Ort</label>
-                    <input type="text" class="form-control mb-2"
-                           id="eventLocation" placeholder="Stadt">
-                    <div class="form-row">
-                        <div class="col">
-                            <label for="longitude">Längengrad</label>
-                            <input type="text" class="form-control"
-                                   id="longitude" placeholder="Längengrad">
+                    <!-- Form -->
+                    <form action="submit.html" class="mt-4" onsubmit="return validate();">
+                        <div class="form-group">
+                            <label for="eventType">Typ</label>
+
+                            <!-- Fragment for type selection -->
+                            <select class="form-control" id="eventType" name="eType">
+                                <option th:fragment="typeOptions" th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
+                            </select>
                         </div>
-                        <div class="col">
-                            <label for="latitude">Breitengrad</label>
-                            <input type="text" class="form-control"
-                                   id="latitude" placeholder="Breitengrad">
+
+                        <div class="form-group">
+                            <label for="eventName">Name</label>
+                            <input type="text" class="form-control" id="eventName" name="eName">
                         </div>
-                    </div>
+
+                        <div class="form-group">
+                            <label for="eventDescription">Beschreibung</label>
+                            <textarea class="form-control" id="eventDescription" rows="3" name="eDesc"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDate">Datum</label>
+                            <input class="form-control" type="date" id="eventDate" value="2020-06-11" min="2020-06-05" name="eDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventLocation">Ort</label>
+                            <input type="text" class="form-control mb-2" id="eventLocation" placeholder="Stadt" name="eLocation">
+                            <div class="form-row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="longitude" placeholder="Längengrad">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="latitude" placeholder="Breitengrad">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block mt-5">Hinzufügen</button>
+                    </form>
                 </div>
-                <button type="submit"
-                        class="btn btn-primary btn-lg btn-block mt-5">Hinzufügen
-                </button>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>
