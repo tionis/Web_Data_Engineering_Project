@@ -50,8 +50,10 @@ public class WebseiteController {
     public String getHome(Model model) {
         String[] types = data.getTypes();
         Event[] events = data.getLastEvents(20);
+        Event[] topEvents = data.getTopEvents(3);
         model.addAttribute("types", types);
         model.addAttribute("events", events);
+        model.addAttribute("topEvents", topEvents);
         return "home";
     }
 
