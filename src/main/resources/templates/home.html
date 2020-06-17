@@ -37,7 +37,6 @@
                 <!-- Searchbar -->
                 <div class="col-8">
                     <form action="/search" method="get">
-                        <label for="query">Suche</label>
                         <input class="form-control form-control-lg bg-light"
                                type="search" name="query" id="query"
                                placeholder="Suchen...">
@@ -84,7 +83,6 @@
                     <h2 class="pb-2">Zuletzt hinzugefügt</h2>
 
                     <!-- Filter for last Events -->
-                    <label for="typeFilter">Typeauswahl</label>
                     <select class="form-control" id="typeFilter" name="filter">
                         <option value="all">Alle</option>
 
@@ -94,15 +92,14 @@
 
                     <!-- Container fragment for events -->
                     <div th:fragment="eventContainer" class="cardContainer lastEvents mt-4 mb-4">
-                        <div th:each="event : ${events}" th:attr="data-type=${event.type}" class="card bg-light mt-2 mb-2">
+                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${#strings.replace(event.name, ' ', '')}" th:onclick="location.href='http://localhost:8080/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
                                     <h4 th:if="${event.rank < 4}" th:text="'# ' + ${event.rank}" class="text-danger"></h4>
                                     <h5 th:text="${event.name}">Name</h5>
                                 </div>
                                 <div class="card-text">
-                                    <p th:text="${#dates.formatISO(event.startDate)}">
-                                        Datum: 22.06.2020</p>
+                                    <p th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}">Datum: 22.06.2020</p>
                                     <p th:text="${#strings.abbreviate(event.description, 150)}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                 </div>
                             </div>
