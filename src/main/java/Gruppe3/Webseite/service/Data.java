@@ -4,7 +4,9 @@ import Gruppe3.Webseite.model.Event;
 import Gruppe3.Webseite.model.Vote;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class Data {
@@ -28,10 +30,24 @@ public class Data {
      * @return List of events
      */
     public Event[] getLastEvents(final int n) {
-        // TODO
-        // Only future events
-        // SELECT * FROM events ORDER BY creation_date DESC LIMIT n;
-        return new Event[]{};
+        // TODO Only return future events
+        List<Event> events = new ArrayList<>();
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM events ORDER BY creation_date DESC LIMIT " + n);
+            conn.close();
+            while (rs.next()) {
+                Event eventToAdd = new Event(
+                        rs.getString("name"), rs.getString("type"),
+                        rs.getDate("start_date"), rs.getDate("creation_date"),
+                        rs.getString("location"), rs.getString("description"));
+                events.add(eventToAdd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return (Event[]) events.toArray();
     }
 
     /**
@@ -41,10 +57,23 @@ public class Data {
      * @return List of Events
      */
     public Event[] getTopEvents(final int n) {
-        // TODO
-        // SQL query that sorts by vote and takes the top n ones:
-        // SELECT * FROM events ORDER BY (likes-dislikes) DESC LIMIT n;
-        return new Event[]{};
+        List<Event> events = new ArrayList<>();
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM events ORDER BY (likes-dislikes) DESC LIMIT " + n);
+            conn.close();
+            while (rs.next()) {
+                Event eventToAdd = new Event(
+                        rs.getString("name"), rs.getString("type"),
+                        rs.getDate("start_date"), rs.getDate("creation_date"),
+                        rs.getString("location"), rs.getString("description"));
+                events.add(eventToAdd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return (Event[]) events.toArray();
     }
 
     /**
@@ -89,8 +118,10 @@ public class Data {
         //TODO
         if (vote.getIsLike()) {
             // Update event in database
+            // UPDATE events SET likes = likes + 1 WHERE name = vote.eventName
         } else {
             // Update event in database
+            // UPDATE events SET dislikes = dislikes + 1 WHERE name = vote.eventName
         }
     }
 
@@ -103,8 +134,10 @@ public class Data {
         //TODO
         if (vote.getIsLike()) {
             // Update event in database
+            // UPDATE events SET likes = likes - 1 WHERE name = vote.eventName
         } else {
-            // Updare event in database
+            // Update event in database
+            // UPDATE events SET dislikes = dislikes - 1 WHERE name = vote.eventName
         }
     }
 
@@ -139,12 +172,22 @@ public class Data {
      */
     public Event getEventByName(final String name) throws NoSuchEvent {
         if (name != null && !name.isEmpty()) {
-            // TODO
-            // SQl query for specific name:
-            // SELECT * FROM events WHERE name = 'test'
-            return new Event(name, "", new Date(), "", "");
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(" SELECT * FROM events WHERE name = '" + name + "'");
+                Event event = new Event(
+                        rs.getString("name"), rs.getString("type"),
+                        rs.getDate("start_date"), rs.getDate("creation_date"),
+                        rs.getString("location"), rs.getString("description"));
+                conn.close();
+                return event;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
             throw new NoSuchEvent("Empty Name");
         }
+        return new Event();
     }
 }
