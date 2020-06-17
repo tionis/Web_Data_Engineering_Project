@@ -92,7 +92,7 @@
 
                     <!-- Container fragment for events -->
                     <div th:fragment="eventContainer" class="cardContainer lastEvents mt-4 mb-4">
-                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${#strings.replace(event.name, ' ', '')}" th:onclick="location.href='http://localhost:8080/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
+                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${#strings.replace(event.name, ' ', '')}" th:onclick="location.href='/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
                                     <h4 th:if="${event.rank < 4}" th:text="'# ' + ${event.rank}" class="text-danger"></h4>
