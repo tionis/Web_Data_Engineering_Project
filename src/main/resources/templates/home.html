@@ -37,17 +37,14 @@
                 <!-- Searchbar -->
                 <div class="col-8">
                     <form action="/search" method="get">
-                        <input class="form-control form-control-lg bg-light"
-                               type="search" name="query" id="query"
-                               placeholder="Suchen...">
+                        <input class="form-control form-control-lg bg-light" type="search" name="query" id="query" placeholder="Suchen...">
                     </form>
                 </div>
 
                 <!-- Add_Event_Button -->
                 <div class="col-4 text-right">
-                    <button class="btn btn-primary btn-block btn-lg"
-                            type="button" onclick="location.href='/add';">Event
-                        hinzufügen
+                    <button class="btn btn-primary btn-block btn-lg" type="button" onclick="location.href='/add';">
+                        Event hinzufügen
                     </button>
                 </div>
             </div>
@@ -61,17 +58,15 @@
 
                     <!-- Container for Events -->
                     <div class="cardContainer mt-4 mb-4">
-
-                        <!-- Demo Event -->
-                        <div class="card bg-light">
+                        <div th:each="topEvent, itemStat : ${topEvents}" th:data-type="${topEvent.type}" th:data-id="${topEvent.name}" th:onclick="location.href='/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
-                                    <h4 class="text-danger">#1</h4>
-                                    <h5>Name</h5>
+                                    <h4 th:text="'# ' + ${itemStat.index + 1}" class="text-danger"></h4>
+                                    <h5 th:text="${#strings.abbreviate(topEvent.name, 50)}">Name</h5>
                                 </div>
                                 <div class="card-text">
-                                    <p>Datum: 22.06.2020</p>
-                                    <p>Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p th:text="${#dates.format(topEvent.startDate, 'dd.MM.yyyy')}">Datum</p>
+                                    <p th:text="${#strings.abbreviate(topEvent.description, 150)}">Beschreibung</p>
                                 </div>
                             </div>
                         </div>
@@ -92,15 +87,17 @@
 
                     <!-- Container fragment for events -->
                     <div th:fragment="eventContainer" class="cardContainer lastEvents mt-4 mb-4">
-                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${#strings.replace(event.name, ' ', '')}" th:onclick="location.href='/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
+                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${event.name}" th:onclick="location.href='/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
-                                    <h4 th:if="${event.rank < 4}" th:text="'# ' + ${event.rank}" class="text-danger"></h4>
-                                    <h5 th:text="${event.name}">Name</h5>
+                                    <th:block th:each="topEvent, itemStat : ${topEvents}">
+                                        <h4 th:if="${topEvent == event}" th:text="'# ' + ${itemStat.index + 1}" class="text-danger"></h4>
+                                    </th:block>
+                                    <h5 th:text="${#strings.abbreviate(event.name, 50)}">Name</h5>
                                 </div>
                                 <div class="card-text">
-                                    <p th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}">Datum: 22.06.2020</p>
-                                    <p th:text="${#strings.abbreviate(event.description, 150)}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}">Datum</p>
+                                    <p th:text="${#strings.abbreviate(event.description, 150)}">Beschreibung</p>
                                 </div>
                             </div>
                         </div>
