@@ -2,21 +2,56 @@ package Gruppe3.Webseite.model;
 
 import java.util.Date;
 
-public class Event {
+public final class Event {
 
-    private final String type;
-    private final String location;
-    private final Date date;
-    private final Date creationDate;
+    /**
+     * Name of the event.
+     */
     private final String name;
+    /**
+     * Type of event this is.
+     */
+    private final String type;
+    /**
+     * Location where the event takes place, this is either a place name or
+     * coordinates in the ISO 6709 format.
+     */
+    private final String location;
+    /**
+     * Date the event starts.
+     */
+    private final Date startDate;
+    /**
+     * Date the event was created.
+     */
+    private final Date creationDate;
+    /**
+     * Full Description of the event.
+     */
     private final String description;
-    private int dislikes;
-    private int likes;
+    /**
+     * Amount of Dislikes of this event.
+     */
+    private final int dislikes;
+    /**
+     * Amount of likes of this event.
+     */
+    private final int likes;
 
-    public Event(String type, String location, Date date, String name, String description) {
+    /**
+     * Create event by specifying all parameters but votes.
+     *
+     * @param type        Type of event to create
+     * @param location    Location of the created event
+     * @param startDate   Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String name, final String type, final Date startDate,
+                 final String location, final String description) {
         this.type = type;
         this.location = location;
-        this.date = date;
+        this.startDate = startDate;
         this.name = name;
         this.description = description;
         this.creationDate = new Date();
@@ -32,11 +67,13 @@ public class Event {
         return location;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Date getCreationDate(){ return creationDate;}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
     public String getName() {
         return name;
@@ -52,5 +89,16 @@ public class Event {
 
     public int getDislikes() {
         return dislikes;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Event)) return false;
+        Event otherEvent = (Event) other;
+        // This may match different event objects, but for our implementations
+        // it doesnt matter.
+        return name.equals(otherEvent.getName());
     }
 }
