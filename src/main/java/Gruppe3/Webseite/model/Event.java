@@ -14,7 +14,7 @@ public final class Event {
     private final String type;
     /**
      * Location where the event takes place, this is either a place name or
-     * coordinates in the ISO 6709 format.
+     * coordinates.
      */
     private final String location;
     /**
@@ -39,7 +39,21 @@ public final class Event {
     private final int likes;
 
     /**
-     * Create event by specifying all parameters but votes.
+     * Dummy constructor
+     */
+    public Event() {
+        this.type = "";
+        this.location = "";
+        this.startDate = new Date();
+        this.name = "";
+        this.description = "";
+        this.creationDate = new Date();
+        dislikes = 0;
+        likes = 0;
+    }
+
+    /**
+     * Create event by specifying all parameters but votes and creation date.
      *
      * @param type        Type of event to create
      * @param location    Location of the created event
@@ -55,6 +69,28 @@ public final class Event {
         this.name = name;
         this.description = description;
         this.creationDate = new Date();
+        dislikes = 0;
+        likes = 0;
+    }
+
+    /**
+     * Create event by specifying all parameters but votes.
+     *
+     * @param type        Type of event to create
+     * @param location    Location of the created event
+     * @param startDate   Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String name, final String type, final Date startDate,
+                 final Date creationDate, final String location,
+                 final String description) {
+        this.type = type;
+        this.location = location;
+        this.startDate = startDate;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
         dislikes = 0;
         likes = 0;
     }
