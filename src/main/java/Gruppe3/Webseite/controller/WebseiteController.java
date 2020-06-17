@@ -5,7 +5,7 @@ import Gruppe3.Webseite.service.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class WebseiteController {
@@ -49,4 +49,15 @@ public class WebseiteController {
         model.addAttribute("events", events);
         return "home";
     }
+
+    /**
+     *
+     */
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "submit.html")
+    @ResponseBody
+    public String getQuery(@RequestParam String eType, @RequestParam String eName, @RequestParam String eDesc, @RequestParam String eDate, @RequestParam String eLocation) {
+        //TODO: wenn datenbank fertig
+    }
+
+
 }
