@@ -41,7 +41,7 @@ public class WebseiteController {
      * @param model Model that transfers data between controller and view
      * @return The home page template.
      */
-    @GetMapping
+    @GetMapping("/")
     public String getHome(Model model) {
         String[] types = data.getTypes();
         Event[] events = data.getLastEvents(20);
