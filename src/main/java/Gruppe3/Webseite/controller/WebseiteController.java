@@ -57,6 +57,7 @@ public class WebseiteController {
     @ResponseBody
     public String getQuery(@RequestParam String eType, @RequestParam String eName, @RequestParam String eDesc, @RequestParam String eDate, @RequestParam String eLocation) {
         //TODO: wenn datenbank fertig
+        return "edit here";
     }
 
 
