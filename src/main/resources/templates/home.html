@@ -36,14 +36,20 @@
 
                 <!-- Searchbar -->
                 <div class="col-8">
-                    <form action="localhost:8080/search" method="get">
-                        <input class="form-control form-control-lg bg-light" type="search" name="query" placeholder="Suchen...">
+                    <form action="/search" method="get">
+                        <label for="query">Suche</label>
+                        <input class="form-control form-control-lg bg-light"
+                               type="search" name="query" id="query"
+                               placeholder="Suchen...">
                     </form>
                 </div>
 
                 <!-- Add_Event_Button -->
                 <div class="col-4 text-right">
-                    <button class="btn btn-primary btn-block btn-lg" type="button" onclick="location.href='http://localhost:8080/add';">Event hinzufügen</button>
+                    <button class="btn btn-primary btn-block btn-lg"
+                            type="button" onclick="location.href='/add';">Event
+                        hinzufügen
+                    </button>
                 </div>
             </div>
 
@@ -78,6 +84,7 @@
                     <h2 class="pb-2">Zuletzt hinzugefügt</h2>
 
                     <!-- Filter for last Events -->
+                    <label for="typeFilter">Typeauswahl</label>
                     <select class="form-control" id="typeFilter" name="filter">
                         <option value="all">Alle</option>
 
