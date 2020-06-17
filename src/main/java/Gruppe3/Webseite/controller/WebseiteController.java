@@ -33,7 +33,7 @@ public class WebseiteController {
      * @param model Model that transfers data between controller and view
      * @return The form page template.
      */
-    @GetMapping("add")
+    @GetMapping("/add")
     public String addEvent(Model model) {
         String[] types = data.getTypes();
         model.addAttribute("types", types);
@@ -53,6 +53,25 @@ public class WebseiteController {
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         return "home";
+    }
+
+    /**
+     * Handles GET requests on path "/event/{eventname}".
+     *
+     * @param model Model that transfers data between controller and view
+     * @param id Eventname
+     * @return The event detail page.
+     */
+    @GetMapping("/event/{id}")
+    public String getEvent(Model model, @PathVariable String id) {
+        Event event = null;
+        try {
+            event = data.getEventByName(id);
+        } catch (NoSuchEvent e) {
+            //TODO
+        }
+        model.addAttribute("event", event);
+        return "event_detail";
     }
 
     /**
