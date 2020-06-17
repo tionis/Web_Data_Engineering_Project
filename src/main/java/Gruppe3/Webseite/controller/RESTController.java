@@ -51,9 +51,8 @@ public class RESTController {
      * @param eventName The event count to return as string
      * @return Event wrapped in response
      */
-    @GetMapping("/api/event")
-    public ResponseEntity<Event> event(
-            @RequestParam(value = "name") final String eventName) {
+    @GetMapping("/api/event/{eventName}")
+    public ResponseEntity<Event> event(@PathVariable final String eventName) {
         try {
             return ResponseEntity.ok(data.getEventByName(eventName));
         } catch (NoSuchEvent e) {

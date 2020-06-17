@@ -28,6 +28,7 @@ public class Data {
      */
     public Event[] getLastEvents(final int n) {
         // TODO
+        // Only future events
         // SELECT * FROM events ORDER BY creation_date DESC LIMIT n;
         return new Event[]{};
     }
@@ -137,7 +138,7 @@ public class Data {
      */
     public Event getEventByName(final String name) throws NoSuchEvent {
         if (name != null && !name.isEmpty()) {
-            //TODO
+            // TODO
             // SQl query for specific name:
             // SELECT * FROM events WHERE name = 'test'
             return new Event(name, "", new Date(), "", "");

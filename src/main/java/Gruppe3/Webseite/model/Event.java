@@ -47,8 +47,8 @@ public final class Event {
      * @param name        Name of the Event
      * @param description Full description for the event
      */
-    public Event(final String type, final String location, final Date startDate,
-                 final String name, final String description) {
+    public Event(final String name, final String type, final Date startDate,
+                 final String location, final String description) {
         this.type = type;
         this.location = location;
         this.startDate = startDate;
@@ -89,5 +89,16 @@ public final class Event {
 
     public int getDislikes() {
         return dislikes;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Event)) return false;
+        Event otherEvent = (Event) other;
+        // This may match different event objects, but for our implementations
+        // it doesnt matter.
+        return name.equals(otherEvent.getName());
     }
 }
