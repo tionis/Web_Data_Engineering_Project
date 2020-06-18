@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.controller;
 
+import Gruppe3.Webseite.dto.EventDto;
 import Gruppe3.Webseite.model.Event;
 import Gruppe3.Webseite.service.Data;
 import Gruppe3.Webseite.service.NoSuchEvent;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 @Controller
@@ -50,8 +50,20 @@ public class WebseiteController {
     @GetMapping("/")
     public String getHome(Model model) {
         String[] types = data.getTypes();
-        Event[] events = data.getLastEvents(20);
-        Event[] topEvents = data.getTopEvents(3);
+        Event[] tempEvents = data.getLastEvents(20);
+        Event[] tempTopEvents = data.getTopEvents(3);
+
+        // Arrays of Dtos
+        EventDto[] events = new EventDto[tempEvents.length];
+        EventDto[] topEvents = new EventDto[tempTopEvents.length];
+
+        // Fill Array of Dtos with data
+        for (int i = 0; i < tempEvents.length; i++) {
+            events[i] = convertToDto(tempEvents[i]);
+        }
+        for (int i = 0; i < tempTopEvents.length; i++) {
+            topEvents[i] = convertToDto(tempTopEvents[i]);
+        }
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         model.addAttribute("topEvents", topEvents);
@@ -67,9 +79,9 @@ public class WebseiteController {
      */
     @GetMapping("/event/{id}")
     public String getEvent(Model model, @PathVariable String id) {
-        Event event = null;
+        EventDto event = null;
         try {
-            event = data.getEventByName(id);
+            event = convertToDto(data.getEventByName(id));
         } catch (NoSuchEvent e) {
             //TODO
         }
@@ -146,6 +158,13 @@ public class WebseiteController {
         model.addAttribute("events", events);
         return "home";
     }
+
+    private EventDto convertToDto(Event event) {
+        return new EventDto(event.getName(), event.getType(),
+                event.getStartDate(), event.getLocation(),
+                event.getDescription(), event.getLikes(), event.getDislikes());
+    }
+
 
     /*
     @ExceptionHandler(NoSuchEvent.class)
