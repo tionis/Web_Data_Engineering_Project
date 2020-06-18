@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Controller
@@ -77,7 +78,17 @@ public class WebseiteController {
     }
 
     /**
+     * Handle add event form data
      *
+     * @param model      model to work with
+     * @param eType      type from add_event form
+     * @param eName      name from add_event form
+     * @param eDesc      description from add_event form
+     * @param eDate      date from add_event form
+     * @param eLocation  location from add_event form
+     * @param eLongitude longitude from add_event form
+     * @param eLatitude  latitude from add_event form
+     * @return specific template to use for response with thymeleaf
      */
     @RequestMapping(method = {RequestMethod.POST}, value = "/")
     public String createEvent(Model model, @RequestParam String eType, @RequestParam String eName,
