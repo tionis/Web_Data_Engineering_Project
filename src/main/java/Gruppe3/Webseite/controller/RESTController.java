@@ -46,6 +46,34 @@ public class RESTController {
     }
 
     /**
+     * Returns the current types.
+     *
+     * @return Types as Array.
+     */
+    @GetMapping("/api/types")
+    public String[] types() {
+        return data.getTypes();
+    }
+
+    /**
+     * Returns the top n events.
+     *
+     * @param countString The event count to return as string
+     * @return Events wrapped in response
+     */
+    @GetMapping("/api/top")
+    public ResponseEntity<Event[]> top(
+            @RequestParam(value = "n", defaultValue = "20") final String countString) {
+        int count;
+        try {
+            count = Integer.parseInt(countString);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.ok(data.getTopEvents(count));
+    }
+
+    /**
      * Returns the specified event.
      *
      * @param eventName The event count to return as string
@@ -56,7 +84,7 @@ public class RESTController {
         try {
             return ResponseEntity.ok(data.getEventByName(eventName));
         } catch (NoSuchEvent e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
@@ -90,5 +118,45 @@ public class RESTController {
         } catch (NoSuchEvent e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+    }
+
+    /**
+     * Handle API Event Creation.
+     *
+     * @param event Event to save to data store
+     * @return Modified event wrapped in response
+     */
+    @PostMapping("/api/create")
+    public ResponseEntity<Event> createEvent(@RequestBody final Event event) {
+        try {
+            data.saveEvent(event);
+            return ResponseEntity.ok(event);
+        } catch (NoSuchEvent e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    /**
+     * Search for an event by location.
+     *
+     * @param searchQuery The search query string.
+     * @return Events found
+     */
+    @GetMapping("/api/search/location")
+    public Event[] locationSearch(
+            @RequestParam(value = "q") final String searchQuery) {
+        return data.searchForEventAfterLocation(searchQuery);
+    }
+
+    /**
+     * Search for an event by name.
+     *
+     * @param searchQuery The search query string.
+     * @return Events found
+     */
+    @GetMapping("/api/search/name")
+    public Event[] nameSearch(
+            @RequestParam(value = "q") final String searchQuery) {
+        return data.searchForEventAfterName(searchQuery);
     }
 }

@@ -6,6 +6,24 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+        <!-- jQuery include -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+        <!-- Script for Website -->
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#typeFilter").change(function() {
+                $(".lastEvents > .card").each(function() {
+                    if ($(this).data("type") == $("#typeFilter").val() || $("#typeFilter").val() == "all") {
+                        $(this).show(500);
+                    } else {
+                        $(this).hide(500)
+                    }
+                });
+            })
+        });
+        </script>
+
         <title>Eventplanungssystem</title>
     </head>
     <body>
@@ -18,12 +36,19 @@
 
                 <!-- Searchbar -->
                 <div class="col-8">
-                    <input class="form-control form-control-lg bg-light" type="search" name="search" placeholder="Suchen...">
+                    <form action="/search" method="get">
+                        <input class="form-control form-control-lg bg-light"
+                               type="search" name="query" id="query"
+                               placeholder="Suchen...">
+                    </form>
                 </div>
 
                 <!-- Add_Event_Button -->
                 <div class="col-4 text-right">
-                    <button class="btn btn-primary btn-block btn-lg" type="button" name="add_event">Event hinzufügen</button>
+                    <button class="btn btn-primary btn-block btn-lg"
+                            type="button" onclick="location.href='/add';">Event
+                        hinzufügen
+                    </button>
                 </div>
             </div>
 
@@ -35,7 +60,7 @@
                     <h2 class="pb-2">Top Events</h2>
 
                     <!-- Container for Events -->
-                    <div class="card_container mt-4 mb-4">
+                    <div class="cardContainer mt-4 mb-4">
 
                         <!-- Demo Event -->
                         <div class="card bg-light">
@@ -58,22 +83,24 @@
                     <h2 class="pb-2">Zuletzt hinzugefügt</h2>
 
                     <!-- Filter for last Events -->
-                    <select class="form-control" name="filter">
+                    <select class="form-control" id="typeFilter" name="filter">
+                        <option value="all">Alle</option>
 
+                        <!-- "add_event.html fragment" -> model attributename must be "types" -->
+                        <option th:replace="add_event.html :: typeOptions" value=""></option>
                     </select>
 
-                    <!-- Container for Events -->
-                    <div class="card_container mt-4 mb-4">
-
-                        <!-- Demo Event -->
-                        <div class="card bg-light">
+                    <!-- Container fragment for events -->
+                    <div th:fragment="eventContainer" class="cardContainer lastEvents mt-4 mb-4">
+                        <div th:each="event : ${events}" th:data-type="${event.type}" th:data-id="${#strings.replace(event.name, ' ', '')}" th:onclick="location.href='/event/'.concat(this.getAttribute('data-id'));" class="card bg-light mt-2 mb-2">
                             <div class="card-body">
                                 <div class="card-title">
-                                    <h5>Name</h5>
+                                    <h4 th:if="${event.rank < 4}" th:text="'# ' + ${event.rank}" class="text-danger"></h4>
+                                    <h5 th:text="${event.name}">Name</h5>
                                 </div>
                                 <div class="card-text">
-                                    <p>Datum: 22.06.2020</p>
-                                    <p>Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}">Datum: 22.06.2020</p>
+                                    <p th:text="${#strings.abbreviate(event.description, 150)}">Beschreibung: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                 </div>
                             </div>
                         </div>
