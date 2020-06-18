@@ -25,22 +25,16 @@
                 alert("Please specify coordinates OR location name!");
                 return false;
             }
-
-            const now = new Date();
+            let now = new Date();
+            now.setHours(0, 0, 0, 0);
             if (Date.parse(date) < now) {
-                alert("Please specify a start date in the future!");
+                alert("Please specify a start date today or in the future!");
                 return false;
             }
             if (!location && (!latitude && !longitude)) {
                 alert("Please specify a location for the event")
                 return false;
             }
-            //let lat = parseFloat(latitude);
-            //let long = parseFloat(longitude);
-            //if (!(!isNaN(lat) && lat <= 90 && lat >= -90) && (!isNaN(long) && long <= 180 && long >= -180)) {
-            //    alert("Please specify valid coordinates!")
-            //    return false;
-            //}
             return true;
         }
     </script>
