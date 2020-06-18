@@ -11,6 +11,10 @@ import java.util.List;
 
 @Service
 public class Data {
+    private final String DATABASE_URL = "jdbc:h2:~/testdb";
+    private final String DATABASE_USER = "sa";
+    private final String DATABASE_PASSWORD = "";
+
     /**
      * Return the currently initialized types of events.
      *
@@ -32,7 +36,7 @@ public class Data {
         // TODO Only return future events
         List<Event> events = new ArrayList<>();
         try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+            Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM events ORDER BY creation_date DESC LIMIT " + n);
             conn.close();
@@ -58,7 +62,7 @@ public class Data {
     public Event[] getTopEvents(final int n) {
         List<Event> events = new ArrayList<>();
         try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+            Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM events ORDER BY (likes-dislikes) DESC LIMIT " + n);
             conn.close();
@@ -141,28 +145,6 @@ public class Data {
     }
 
     /**
-     * Get Amount of likes for a given event by name.
-     *
-     * @param name Name of Event
-     * @return Amount of likes
-     */
-    public int getLikeCount(final String name) throws NoSuchEvent {
-        // Is this efficient enough?
-        return getEventByName(name).getLikes();
-    }
-
-    /**
-     * Get Amount of dislikes for a given event by name.
-     *
-     * @param name Name of event
-     * @return Amount of Dislikes
-     */
-    public int getDislikeCount(final String name) throws NoSuchEvent {
-        // Is this efficient enough?
-        return getEventByName(name).getDislikes();
-    }
-
-    /**
      * Get an event by specifying its name.
      *
      * @param name Name of the event
@@ -172,7 +154,7 @@ public class Data {
     public Event getEventByName(final String name) throws NoSuchEvent {
         if (name != null && !name.isEmpty()) {
             try {
-                Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+                Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(" SELECT * FROM events WHERE name = '" + name + "'");
                 Event event = new Event(
@@ -182,6 +164,7 @@ public class Data {
                 conn.close();
                 return event;
             } catch (SQLException e) {
+                //Catch no such event
                 e.printStackTrace();
             }
         } else {
