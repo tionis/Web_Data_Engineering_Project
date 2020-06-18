@@ -84,7 +84,7 @@ public class RESTController {
         try {
             return ResponseEntity.ok(data.getEventByName(eventName));
         } catch (NoSuchEvent e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
