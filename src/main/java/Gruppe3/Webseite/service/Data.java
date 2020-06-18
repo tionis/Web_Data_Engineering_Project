@@ -22,7 +22,7 @@ public class Data {
     public String[] getTypes() {
         // TODO
         // get array from initialization(maybe save in database?)
-        return new String[]{};
+        return new String[]{"test"};
     }
 
     /**
@@ -107,7 +107,7 @@ public class Data {
      *
      * @param eventToSave Event to add to database
      */
-    public void saveEvent(final Event eventToSave) {
+    public void saveEvent(final Event eventToSave) throws NoSuchEvent {
         // sql query to add to table
     }
 
