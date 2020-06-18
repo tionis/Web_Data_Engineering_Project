@@ -91,7 +91,7 @@
                             <div class="card-body">
                                 <div class="card-title">
                                     <th:block th:each="topEvent, itemStat : ${topEvents}">
-                                        <h4 th:if="${topEvent == event}" th:text="'# ' + ${itemStat.index + 1}" class="text-danger"></h4>
+                                        <h4 th:if="${topEvent.name == event.name}" th:text="'# ' + ${itemStat.index + 1}" class="text-danger"></h4>
                                     </th:block>
                                     <h5 th:text="${#strings.abbreviate(event.name, 50)}">Name</h5>
                                 </div>
