@@ -2,8 +2,10 @@ package Gruppe3.Webseite.service;
 
 import Gruppe3.Webseite.model.Event;
 import Gruppe3.Webseite.model.Vote;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +17,16 @@ public class Data {
     private final String DATABASE_USER = "sa";
     private final String DATABASE_PASSWORD = "";
 
+    @Value("${types:}")
+    private final String[] types = new String[]{"default", "education", "fun", "music"};
+
     /**
      * Return the currently initialized types of events.
      *
      * @return List of Types
      */
     public String[] getTypes() {
-        // TODO
-        // get array from initialization(maybe save in database?)
-        return new String[]{"test"};
+        return types;
     }
 
     /**
