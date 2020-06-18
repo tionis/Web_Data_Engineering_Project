@@ -21,8 +21,20 @@ This Object represents a vote operation and consists of these values:
 #### /api/events?n=YOUR_VALUE_HERE
  Returns the last n events as an array with Event Objects.
 
-#### /api/events?name=YOUR_VALUE_HERE
-Returns an event if one is found for given name, if not HTTP 400 is returned.
+### /api/event/EVENT_NAME_HERE
+Returns an event of this specific name, if it does not exist HTTP 400 is returned.
+
+### /api/search/location?q=YOUR_VALUE_HERE
+Returns an array of events found for this search query after location.
+
+### /api/search/name?q=YOUR_VALUE_HERE
+Returns an array of events found for this search query after name.
+
+### /api/types
+Returns the currently active event types.
+
+### /api/top?n=YOUR_VALUE_HERE
+Returns the top n events as array.
 
 ### POST Resources
 #### /api/vote/add
@@ -30,3 +42,6 @@ Accepts a vote object to add to its event.
 
 #### /api/vote/remove
 Accepts a vote object to remove from its event.
+
+### /api/create
+Accepts an event to save to datastore. Returns HTTP 400 if it alreay exists.
