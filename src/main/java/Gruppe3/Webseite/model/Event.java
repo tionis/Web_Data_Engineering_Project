@@ -133,8 +133,8 @@ public final class Event {
         if (other == this) return true;
         if (!(other instanceof Event)) return false;
         Event otherEvent = (Event) other;
-        // This may match different event objects, but for our implementations
-        // it doesnt matter.
+        // This may match different event objects as only names are compared,
+        // but for this implementations it doesn't matter.
         return name.equals(otherEvent.getName());
     }
 }
