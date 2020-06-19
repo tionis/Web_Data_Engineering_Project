@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.application.service;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.entities.Vote;
@@ -16,50 +17,126 @@ import java.util.Date;
 @Service
 public class EventService {
 
+    /**
+     * The data store layer object.
+     */
     private final Data data;
 
+    /**
+     * Create a basic Event Service.
+     *
+     * @param data Data store layer object to use.
+     */
     @Autowired
     public EventService(final Data data) {
         this.data = data;
     }
 
+    /**
+     * Get the currently initialized event types.
+     *
+     * @return String array of types
+     */
     public String[] getTypes() {
         return data.getTypes();
     }
 
-    public EventDto[] searchForEventAfterLocation(String searchQuery) {
-        return convertEventsToDtoArray(data.searchForEventAfterLocation(searchQuery));
-    }
-
-    public EventDto[] getTopEvents(int count) {
+    /**
+     * Get the top n events of all time.
+     *
+     * @param count Amount of events
+     * @return Top Events as Dto Array
+     */
+    public EventDto[] getTopEvents(final int count) {
         return convertEventsToDtoArray(data.getTopEvents(count));
     }
 
-    public EventDto getEventByName(String eventName) throws NoSuchEvent {
+    /**
+     * Get event with a given name.
+     *
+     * @param eventName The name of the event
+     * @return Event as dto
+     * @throws NoSuchEvent thrown when no event with given name exists
+     */
+    public EventDto getEventByName(final String eventName) throws NoSuchEvent {
         return convertEventToDto(data.getEventByName(eventName));
     }
 
-    public void addVote(VoteDto vote) throws NoSuchEvent {
+    /**
+     * Add Vote to specified event.
+     *
+     * @param vote The vote to add to data store
+     * @throws NoSuchEvent Thrown when no event with given Name exists.
+     */
+    public void addVote(final VoteDto vote) throws NoSuchEvent {
         data.addVote(convertVoteDtoToVote(vote));
     }
 
-    public void removeVote(VoteDto vote) throws NoSuchEvent {
+    /**
+     * Remove Vote from specified event.
+     *
+     * @param vote The vote to remove from data store
+     * @throws NoSuchEvent Thrown when no event with given Name exists.
+     */
+    public void removeVote(final VoteDto vote) throws NoSuchEvent {
         data.removeVote(convertVoteDtoToVote(vote));
     }
 
-    public EventDto[] searchForEventAfterName(String searchQuery) {
+    /**
+     * Search for events after location.
+     *
+     * @param searchQuery The string to search for
+     * @return Events found in an EventDto Array
+     */
+    public EventDto[] searchForEventAfterLocation(final String searchQuery) {
+        return convertEventsToDtoArray(data.searchForEventAfterLocation(searchQuery));
+    }
+
+    /**
+     * Search for events after name.
+     *
+     * @param searchQuery The string to search for
+     * @return Events found in an EventDto Array
+     */
+    public EventDto[] searchForEventAfterName(final String searchQuery) {
         return convertEventsToDtoArray(data.searchForEventAfterName(searchQuery));
     }
 
-    public EventDto[] getLastEvents(int n) {
+    /**
+     * Get the n last added events, but only future ones.
+     *
+     * @param n Amount of events
+     * @return Events add Array Dtos
+     */
+    public EventDto[] getLastEvents(final int n) {
         return convertEventsToDtoArray(data.getLastEvents(n));
     }
 
-    public void saveEvent(Event event) throws NoSuchEvent {
+    /**
+     * Save the given Event to data store.
+     *
+     * @param event the event to save to data store
+     * @throws EventNameTaken - thrown when an event with the same name already exists
+     */
+    public void saveEvent(final Event event) throws EventNameTaken {
         data.saveEvent(event);
     }
 
-    public void createEvent(String eName, String eType, String eDate, String eLocation, String eLongitude, String eLatitude, String eDesc) {
+    /**
+     * Handle add event from controller for add_event form.
+     *
+     * @param eType      type from add_event form
+     * @param eName      name from add_event form
+     * @param eDesc      description from add_event form
+     * @param eDate      date from add_event form
+     * @param eLocation  location from add_event form
+     * @param eLongitude longitude from add_event form
+     * @param eLatitude  latitude from add_event form
+     */
+    public void createEvent(final String eName, final String eType,
+                            final String eDate, final String eLocation,
+                            final String eLongitude, final String eLatitude,
+                            final String eDesc) {
         // Check if type is valid
         String[] types = getTypes();
         boolean isValid = false;
@@ -101,7 +178,7 @@ public class EventService {
         Event eventToSave = new Event(eName, eType, startDate, locationString, eDesc);
         try {
             saveEvent(eventToSave);
-        } catch (NoSuchEvent e) {
+        } catch (EventNameTaken e) {
             throw new RuntimeException("Event name taken.");
         }
 
@@ -113,17 +190,17 @@ public class EventService {
      * @param voteDto VoteDto to transform
      * @return Transformed Vote Entity
      */
-    private Vote convertVoteDtoToVote(VoteDto voteDto) {
+    private Vote convertVoteDtoToVote(final VoteDto voteDto) {
         return new Vote(voteDto.getEventName(), voteDto.isLike());
     }
 
     /**
-     * Convert a given event to a event dto
+     * Convert a given event to a event dto.
      *
      * @param event Event to transform
      * @return event encoded as dto
      */
-    private EventDto convertEventToDto(Event event) {
+    private EventDto convertEventToDto(final Event event) {
         return new EventDto(event.getName(), event.getType(),
                 event.getStartDate(), event.getCreationDate(),
                 event.getLocation(), event.getDescription(),
@@ -136,7 +213,7 @@ public class EventService {
      * @param events Events to transform
      * @return event encoded as dto
      */
-    private EventDto[] convertEventsToDtoArray(Event[] events) {
+    private EventDto[] convertEventsToDtoArray(final Event[] events) {
         EventDto[] returnArray = new EventDto[events.length];
         for (int i = 0; i < events.length; i++) {
             returnArray[i] = convertEventToDto(events[i]);
