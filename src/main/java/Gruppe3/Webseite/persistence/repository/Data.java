@@ -6,6 +6,7 @@ import Gruppe3.Webseite.persistence.entities.Vote;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class Data {
      */
     public Event[] getLastEvents(final int n) {
         // TODO Only return future events
+        return new Event[]{new Event("Test1", "default", new Date(), "Passau", "Description here")};
+        /*
         List<Event> events = new ArrayList<>();
         try {
             Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
@@ -51,7 +54,7 @@ public class Data {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return (Event[]) events.toArray();
+        return events.toArray();*/
     }
 
     /**
@@ -61,6 +64,8 @@ public class Data {
      * @return List of Events
      */
     public Event[] getTopEvents(final int n) {
+        return new Event[]{new Event("Top1", "default", new Date(), "Passau", "Description here")};
+        /*
         List<Event> events = new ArrayList<>();
         try {
             Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
@@ -77,7 +82,7 @@ public class Data {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return (Event[]) events.toArray();
+        return (Event[]) events.toArray();*/
     }
 
     /**
@@ -153,7 +158,9 @@ public class Data {
      * @throws NoSuchEvent No event with given name found
      */
     public Event getEventByName(final String name) throws NoSuchEvent {
-        if (name != null && !name.isEmpty()) {
+        return new Event(name, "default", new Date(), "Passau", "Description here");
+    }
+        /*if (name != null && !name.isEmpty()) {
             try {
                 Connection conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
                 Statement stmt = conn.createStatement();
@@ -172,5 +179,5 @@ public class Data {
             throw new NoSuchEvent("Empty Name");
         }
         return new Event();
-    }
+    }*/
 }
