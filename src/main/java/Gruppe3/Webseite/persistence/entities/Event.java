@@ -1,12 +1,16 @@
 package Gruppe3.Webseite.persistence.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public final class Event {
 
     /**
      * Name of the event.
      */
+    @Id
     private final String name;
     /**
      * Type of event this is.
