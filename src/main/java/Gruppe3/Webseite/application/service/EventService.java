@@ -5,6 +5,7 @@ import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.entities.Vote;
 import Gruppe3.Webseite.persistence.repository.Data;
 import Gruppe3.Webseite.web.dto.EventDto;
+import Gruppe3.Webseite.web.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,31 +28,31 @@ public class EventService {
     }
 
     public EventDto[] searchForEventAfterLocation(String searchQuery) {
-        return convertToDtoArray(data.searchForEventAfterLocation(searchQuery));
+        return convertEventsToDtoArray(data.searchForEventAfterLocation(searchQuery));
     }
 
     public EventDto[] getTopEvents(int count) {
-        return convertToDtoArray(data.getTopEvents(count));
+        return convertEventsToDtoArray(data.getTopEvents(count));
     }
 
     public EventDto getEventByName(String eventName) throws NoSuchEvent {
-        return convertToDto(data.getEventByName(eventName));
+        return convertEventToDto(data.getEventByName(eventName));
     }
 
-    public void addVote(Vote vote) throws NoSuchEvent {
-        data.addVote(vote);
+    public void addVote(VoteDto vote) throws NoSuchEvent {
+        data.addVote(convertVoteDtoToVote(vote));
     }
 
-    public void removeVote(Vote vote) throws NoSuchEvent {
-        data.removeVote(vote);
+    public void removeVote(VoteDto vote) throws NoSuchEvent {
+        data.removeVote(convertVoteDtoToVote(vote));
     }
 
     public EventDto[] searchForEventAfterName(String searchQuery) {
-        return convertToDtoArray(data.searchForEventAfterName(searchQuery));
+        return convertEventsToDtoArray(data.searchForEventAfterName(searchQuery));
     }
 
     public EventDto[] getLastEvents(int n) {
-        return convertToDtoArray(data.getLastEvents(n));
+        return convertEventsToDtoArray(data.getLastEvents(n));
     }
 
     public void saveEvent(Event event) throws NoSuchEvent {
@@ -107,12 +108,22 @@ public class EventService {
     }
 
     /**
+     * Convert a VoteDto to a regular Vote Entity.
+     *
+     * @param voteDto VoteDto to transform
+     * @return Transformed Vote Entity
+     */
+    private Vote convertVoteDtoToVote(VoteDto voteDto) {
+        return new Vote(voteDto.getEventName(), voteDto.isLike());
+    }
+
+    /**
      * Convert a given event to a event dto
      *
      * @param event Event to transform
      * @return event encoded as dto
      */
-    private EventDto convertToDto(Event event) {
+    private EventDto convertEventToDto(Event event) {
         return new EventDto(event.getName(), event.getType(),
                 event.getStartDate(), event.getCreationDate(),
                 event.getLocation(), event.getDescription(),
@@ -125,10 +136,10 @@ public class EventService {
      * @param events Events to transform
      * @return event encoded as dto
      */
-    private EventDto[] convertToDtoArray(Event[] events) {
+    private EventDto[] convertEventsToDtoArray(Event[] events) {
         EventDto[] returnArray = new EventDto[events.length];
         for (int i = 0; i < events.length; i++) {
-            returnArray[i] = convertToDto(events[i]);
+            returnArray[i] = convertEventToDto(events[i]);
         }
         return returnArray;
     }
