@@ -16,18 +16,15 @@
 
     <!-- Script for Website -->
     <script type="text/javascript">
-        async function sendForm() {
-            // Check availability of event
-            let urlName = encodeURI(document.forms["createEvent"]["eventName"].value);
-            let url = window.location.href;
-            let arr = url.split("/");
-            let host = arr[0] + "//" + arr[2];
-            let response = await fetch(host + "/api/event/" + urlName);
-            if (!response.ok) {
-                alert("Sorry, this name is taken, please choose another one");
+        // Page Initialization
+        var nameValid = false;
+
+        function validateForm() {
+            // Check if name is valid
+            if (!nameValid) {
+                alert("Please choose an available event name!");
                 return false;
             }
-
             // Check validity of event
             const location = document.forms["createEvent"]["eventLocation"].value;
             const latitude = document.forms["createEvent"]["latitude"].value;
@@ -48,6 +45,21 @@
                 return false;
             }
             document.forms["createEvent"].submit();
+        }
+
+        async function checkNameAvailability() {
+            let urlName = encodeURI(document.forms["createEvent"]["eventName"].value);
+            let url = window.location.href;
+            let arr = url.split("/");
+            let host = arr[0] + "//" + arr[2];
+            let response = await fetch(host + "/api/event/" + urlName);
+            if (response.ok) {
+                nameValid = false;
+                document.forms["createEvent"]["eventName"].style = "color:red";
+            } else {
+                nameValid = true;
+                document.forms["createEvent"]["eventName"].style = "color:green";
+            }
         }
     </script>
 
@@ -82,7 +94,7 @@
 
             <!-- Form -->
             <form action="/" class="mt-4" name="createEvent" method="post"
-                  onsubmit="return sendForm()">
+                  onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="eventType">Typ</label>
 
@@ -97,7 +109,7 @@
                 <div class="form-group">
                     <label for="eventName">Name</label>
                     <input type="text" class="form-control" id="eventName"
-                           name="eName" required>
+                           name="eName" oninput="checkNameAvailability()">
                 </div>
 
                 <div class="form-group">
@@ -136,7 +148,8 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-lg btn-block mt-5">Hinzufügen
+                <button class="btn btn-primary btn-lg btn-block mt-5"
+                        type="submit">Hinzufügen
                 </button>
             </form>
         </div>

@@ -95,6 +95,28 @@ public final class Event {
         likes = 0;
     }
 
+    /**
+     * Create event by specifying all parameters.
+     *
+     * @param type        Type of event to create
+     * @param location    Location of the created event
+     * @param startDate   Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String name, final String type, final Date startDate,
+                 final Date creationDate, final String location,
+                 final String description, final int likes, final int dislikes) {
+        this.type = type;
+        this.location = location;
+        this.startDate = startDate;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.dislikes = dislikes;
+        this.likes = likes;
+    }
+
     public String getType() {
         return type;
     }
