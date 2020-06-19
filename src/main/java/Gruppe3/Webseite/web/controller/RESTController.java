@@ -1,9 +1,10 @@
-package Gruppe3.Webseite.controller;
+package Gruppe3.Webseite.web.controller;
 
-import Gruppe3.Webseite.model.Event;
-import Gruppe3.Webseite.model.Vote;
-import Gruppe3.Webseite.service.Data;
-import Gruppe3.Webseite.service.NoSuchEvent;
+import Gruppe3.Webseite.web.dto.EventDto;
+import Gruppe3.Webseite.persistence.entities.Event;
+import Gruppe3.Webseite.persistence.entities.Vote;
+import Gruppe3.Webseite.persistence.repository.Data;
+import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class RESTController {
      * @return Events wrapped in response
      */
     @GetMapping("/api/events")
-    public ResponseEntity<Event[]> events(
+    public ResponseEntity<EventDto[]> events(
             @RequestParam(value = "n", defaultValue = "20") final String countString) {
         int count;
         try {
@@ -42,7 +43,7 @@ public class RESTController {
         } catch (NumberFormatException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.ok(data.getLastEvents(count));
+        return ResponseEntity.ok(convertToDtoArray(data.getLastEvents(count)));
     }
 
     /**
@@ -155,8 +156,36 @@ public class RESTController {
      * @return Events found
      */
     @GetMapping("/api/search/name")
-    public Event[] nameSearch(
+    public EventDto[] nameSearch(
             @RequestParam(value = "q") final String searchQuery) {
-        return data.searchForEventAfterName(searchQuery);
+        return convertToDtoArray(data.searchForEventAfterName(searchQuery));
+    }
+
+    /**
+     * Convert a given event to a event dto
+     *
+     * @param event Event to transform
+     * @return event encoded as dto
+     */
+    private EventDto convertToDto(Event event) {
+        return new EventDto(event.getName(), event.getType(),
+                event.getStartDate(), event.getLocation(),
+                event.getDescription(), event.getLikes(), event.getDislikes());
+    }
+
+    /**
+     * Convert a given event array to a dto event array
+     *
+     * @param event Events to transform
+     * @return events encoded as dto array
+     */
+    private EventDto[] convertToDtoArray(Event[] event) {
+        EventDto[] retArray = new EventDto[event.length];
+        for (int i = 0; i <= event.length; i++) {
+            retArray[i] = new EventDto(event[i].getName(), event[i].getType(),
+                    event[i].getStartDate(), event[i].getLocation(),
+                    event[i].getDescription(), event[i].getLikes(), event[i].getDislikes());
+        }
+        return retArray;
     }
 }

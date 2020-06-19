@@ -1,4 +1,4 @@
-package Gruppe3.Webseite.service;
+package Gruppe3.Webseite.application.exception;
 
 public final class NoSuchEvent extends Exception {
     /**

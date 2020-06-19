@@ -1,9 +1,9 @@
-package Gruppe3.Webseite.controller;
+package Gruppe3.Webseite.web.controller;
 
-import Gruppe3.Webseite.dto.EventDto;
-import Gruppe3.Webseite.model.Event;
-import Gruppe3.Webseite.service.Data;
-import Gruppe3.Webseite.service.NoSuchEvent;
+import Gruppe3.Webseite.web.dto.EventDto;
+import Gruppe3.Webseite.persistence.entities.Event;
+import Gruppe3.Webseite.persistence.repository.Data;
+import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,7 +83,7 @@ public class WebseiteController {
         try {
             event = convertToDto(data.getEventByName(id));
         } catch (NoSuchEvent e) {
-            //TODO
+            //TODO HTTP 404 ERROR
         }
         model.addAttribute("event", event);
         return "event_detail";

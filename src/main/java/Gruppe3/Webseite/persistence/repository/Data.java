@@ -1,11 +1,11 @@
-package Gruppe3.Webseite.service;
+package Gruppe3.Webseite.persistence.repository;
 
-import Gruppe3.Webseite.model.Event;
-import Gruppe3.Webseite.model.Vote;
+import Gruppe3.Webseite.application.exception.NoSuchEvent;
+import Gruppe3.Webseite.persistence.entities.Event;
+import Gruppe3.Webseite.persistence.entities.Vote;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,6 @@ public class Data {
     private final String DATABASE_URL = "jdbc:h2:~/testdb";
     private final String DATABASE_USER = "sa";
     private final String DATABASE_PASSWORD = "";
-
     @Value("${types:}")
     private final String[] types = new String[]{"default", "education", "fun", "music"};
     
