@@ -8,17 +8,19 @@ public class EventDto {
     private final String type;
     private final String location;
     private final Date startDate;
+    private final Date creationDate;
     private final String description;
     private final int dislikes;
     private final int likes;
 
 
     public EventDto(final String name, final String type, final Date startDate,
-                    final String location, final String description,
-                    final int likes, final int dislikes) {
+                    final Date creationDate, final String location,
+                    final String description, final int likes, final int dislikes) {
         this.type = type;
         this.location = location;
         this.startDate = startDate;
+        this.creationDate = creationDate;
         this.name = name;
         this.description = description;
         this.dislikes = dislikes;
@@ -39,6 +41,10 @@ public class EventDto {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     public String getDescription() {
