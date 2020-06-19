@@ -3,9 +3,8 @@ package Gruppe3.Webseite.web.controller;
 import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.persistence.entities.Event;
-import Gruppe3.Webseite.persistence.entities.Vote;
-import Gruppe3.Webseite.persistence.repository.Data;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
+import Gruppe3.Webseite.web.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,7 +96,7 @@ public class RESTController {
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/vote/add")
-    public ResponseEntity<EventDto> addVote(@RequestBody final Vote vote) {
+    public ResponseEntity<EventDto> addVote(@RequestBody final VoteDto vote) {
         try {
             eventService.addVote(vote);
             return ResponseEntity.ok(eventService.getEventByName(vote.getEventName()));
@@ -113,7 +112,7 @@ public class RESTController {
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/vote/remove")
-    public ResponseEntity<EventDto> removeVote(@RequestBody final Vote vote) {
+    public ResponseEntity<EventDto> removeVote(@RequestBody final VoteDto vote) {
         try {
             eventService.removeVote(vote);
             return ResponseEntity.ok(eventService.getEventByName(vote.getEventName()));
