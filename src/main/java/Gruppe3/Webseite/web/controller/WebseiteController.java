@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.web.controller;
 
+import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.repository.Data;
@@ -16,27 +17,27 @@ import java.util.Date;
 @Controller
 public class WebseiteController {
 
-    private final Data data;
+    private final EventService eventService;
 
     /**
      * Constructs a WebseiteController
      *
-     * @param data The data object for service methods
+     * @param eventService The eventService object for service methods
      */
     @Autowired
-    public WebseiteController(Data data) {
-        this.data = data;
+    public WebseiteController(EventService eventService) {
+        this.eventService = eventService;
     }
 
     /**
      * Handles GET requests on path "/add".
      *
-     * @param model Model that transfers data between controller and view
+     * @param model Model that transfers eventService between controller and view
      * @return The form page template.
      */
     @GetMapping("/add")
     public String addEvent(Model model) {
-        String[] types = data.getTypes();
+        String[] types = eventService.getTypes();
         model.addAttribute("types", types);
         return "add_event";
     }
@@ -44,25 +45,25 @@ public class WebseiteController {
     /**
      * Handles GET requests on path "/".
      *
-     * @param model Model that transfers data between controller and view
+     * @param model Model that transfers eventService between controller and view
      * @return The home page template.
      */
     @GetMapping("/")
     public String getHome(Model model) {
-        String[] types = data.getTypes();
-        Event[] tempEvents = data.getLastEvents(20);
-        Event[] tempTopEvents = data.getTopEvents(3);
+        String[] types = eventService.getTypes();
+        EventDto[] tempEvents = eventService.getLastEvents(20);
+        EventDto[] tempTopEvents = eventService.getTopEvents(3);
 
         // Arrays of Dtos
         EventDto[] events = new EventDto[tempEvents.length];
         EventDto[] topEvents = new EventDto[tempTopEvents.length];
 
-        // Fill Array of Dtos with data
+        // Fill Array of Dtos with eventService
         for (int i = 0; i < tempEvents.length; i++) {
-            events[i] = convertToDto(tempEvents[i]);
+            events[i] = tempEvents[i];
         }
         for (int i = 0; i < tempTopEvents.length; i++) {
-            topEvents[i] = convertToDto(tempTopEvents[i]);
+            topEvents[i] = tempTopEvents[i];
         }
         model.addAttribute("types", types);
         model.addAttribute("events", events);
@@ -73,15 +74,15 @@ public class WebseiteController {
     /**
      * Handles GET requests on path "/event/{eventname}".
      *
-     * @param model Model that transfers data between controller and view
-     * @param id Eventname
+     * @param model Model that transfers eventService between controller and view
+     * @param id    Eventname
      * @return The event detail page.
      */
     @GetMapping("/event/{id}")
     public String getEvent(Model model, @PathVariable String id) {
         EventDto event = null;
         try {
-            event = convertToDto(data.getEventByName(id));
+            event = eventService.getEventByName(id);
         } catch (NoSuchEvent e) {
             //TODO HTTP 404 ERROR
         }
@@ -90,7 +91,7 @@ public class WebseiteController {
     }
 
     /**
-     * Handle add event form data
+     * Handle add event form eventService
      *
      * @param model      model to work with
      * @param eType      type from add_event form
@@ -107,64 +108,37 @@ public class WebseiteController {
                               @RequestParam String eDesc, @RequestParam String eDate,
                               @RequestParam String eLocation, @RequestParam String eLongitude,
                               @RequestParam String eLatitude) {
-        // Check if type is valid
-        String[] types = data.getTypes();
-        boolean isValid = false;
-        for (String compareType : types) {
-            if (!isValid) {
-                if (eType.equals(compareType)) {
-                    isValid = true;
-                }
-            }
-        }
-        if (!isValid) {
-            return "error";
-        }
-
-        // Parse date
-        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate;
-        try {
-            startDate = parser.parse(eDate);
-        } catch (ParseException e) {
-            return "error";
-        }
-
-        // Create location string by checking if both field are used
-        String locationString;
-        if (eLocation.isEmpty()) {
-            if (!eLatitude.isEmpty() && !eLongitude.isEmpty()) {
-                locationString = eLatitude + " " + eLongitude;
-            } else {
-                return "error";
-            }
-        } else if (eLatitude.isEmpty() && eLongitude.isEmpty()) {
-            locationString = eLocation;
-        } else {
-            return "error";
-        }
-
-        // Create Event
-        Event eventToSave = new Event(eName, eType, startDate, locationString, eDesc);
-        try {
-            data.saveEvent(eventToSave);
-        } catch (NoSuchEvent e) {
-            return "error";
-        }
+        // Parse Event
+        eventService.createEvent(eName, eType, eDate, eLocation, eLongitude, eLatitude, eDesc);
 
         // Construct Site
-        Event[] events = data.getLastEvents(20);
+        String[] types = eventService.getTypes();
+        Event[] events = convertToEventArray(eventService.getLastEvents(20));
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         return "home";
     }
 
-    private EventDto convertToDto(Event event) {
-        return new EventDto(event.getName(), event.getType(),
-                event.getStartDate(), event.getLocation(),
-                event.getDescription(), event.getLikes(), event.getDislikes());
+    private Event[] convertToEventArray(EventDto[] inputDtos) {
+        Event[] returnArray = new Event[inputDtos.length];
+        for (int i = 0; i < inputDtos.length; i++) {
+            returnArray[i] = convertToEvent(inputDtos[i]);
+        }
+        return returnArray;
     }
 
+    /**
+     * Convert a given event dto to a event.
+     *
+     * @param eventDto EventDto to transform
+     * @return decoded event
+     */
+    private Event convertToEvent(EventDto eventDto) {
+        return new Event(eventDto.getName(), eventDto.getType(),
+                eventDto.getStartDate(), eventDto.getCreationDate(),
+                eventDto.getLocation(), eventDto.getDescription(),
+                eventDto.getLikes(), eventDto.getDislikes());
+    }
 
     /*
     @ExceptionHandler(NoSuchEvent.class)
