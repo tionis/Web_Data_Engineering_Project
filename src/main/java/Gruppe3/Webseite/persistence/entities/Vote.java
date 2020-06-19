@@ -1,4 +1,4 @@
-package Gruppe3.Webseite.model;
+package Gruppe3.Webseite.persistence.entities;
 
 public final class Vote {
     /**

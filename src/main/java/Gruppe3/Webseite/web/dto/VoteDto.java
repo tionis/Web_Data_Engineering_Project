@@ -1,4 +1,4 @@
-package Gruppe3.Webseite.dto;
+package Gruppe3.Webseite.web.dto;
 
 public class VoteDto {
 
