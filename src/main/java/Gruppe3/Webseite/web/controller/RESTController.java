@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.web.controller;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.persistence.entities.Event;
@@ -132,7 +133,7 @@ public class RESTController {
         try {
             eventService.saveEvent(event);
             return ResponseEntity.ok(event);
-        } catch (NoSuchEvent e) {
+        } catch (EventNameTaken e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }

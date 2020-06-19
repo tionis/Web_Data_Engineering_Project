@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.persistence.repository;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.entities.Vote;
@@ -114,7 +115,7 @@ public class Data {
      *
      * @param eventToSave Event to add to database
      */
-    public void saveEvent(final Event eventToSave) throws NoSuchEvent {
+    public void saveEvent(final Event eventToSave) throws EventNameTaken {
         // sql query to add to table
     }
 
