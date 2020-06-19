@@ -1,5 +1,5 @@
 # Implementation Specifics
-The base project structure consists of a few controllers, a few models, and service classes.  
-The controllers handle all incoming requests and apply business logic on top of it.  
-The models define how data may flow between parts of the application.
-The service section handles backend responsibilities like the database.
+The base project structure consists of a few packages
+The application package implements the projects custom exceptions, the data initialization package and the service package.
+The persistence package implements the entities package and the data repositories for database interaction.
+The web package implements the top layer of the application. Here the Dtos for the api and view are implemented, while web requests are handled by the relevant controllers.
