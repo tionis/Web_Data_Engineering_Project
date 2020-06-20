@@ -3,33 +3,41 @@ package Gruppe3.Webseite.application.service;
 import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
-import Gruppe3.Webseite.persistence.entities.Vote;
-import Gruppe3.Webseite.persistence.repository.Data;
+import Gruppe3.Webseite.persistence.repository.EventRepository;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.web.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
 
     /**
-     * The data store layer object.
+     * The data repository.
      */
-    private final Data data;
+    private final EventRepository repository;
+
+    /**
+     * The allowed event types.
+     */
+    @Value("${types:}")
+    private final String[] types = new String[]{"default", "education", "fun", "music"};
 
     /**
      * Create a basic Event Service.
      *
-     * @param data Data store layer object to use.
+     * @param repository Repository to use for data access.
      */
     @Autowired
-    public EventService(final Data data) {
-        this.data = data;
+    public EventService(final EventRepository repository) {
+        this.repository = repository;
     }
 
     /**
@@ -38,7 +46,7 @@ public class EventService {
      * @return String array of types
      */
     public String[] getTypes() {
-        return data.getTypes();
+        return types;
     }
 
     /**
@@ -48,7 +56,8 @@ public class EventService {
      * @return Top Events as Dto Array
      */
     public EventDto[] getTopEvents(final int count) {
-        return convertEventsToDtoArray(data.getTopEvents(count));
+        Event[] tmpArray = repository.getTopEvents(count);
+        return convertEventsToDtoArray(tmpArray);
     }
 
     /**
@@ -59,7 +68,7 @@ public class EventService {
      * @throws NoSuchEvent thrown when no event with given name exists
      */
     public EventDto getEventByName(final String eventName) throws NoSuchEvent {
-        return convertEventToDto(data.getEventByName(eventName));
+        return convertEventToDto(getEventObjectPerName(eventName));
     }
 
     /**
@@ -69,7 +78,13 @@ public class EventService {
      * @throws NoSuchEvent Thrown when no event with given Name exists.
      */
     public void addVote(final VoteDto vote) throws NoSuchEvent {
-        data.addVote(convertVoteDtoToVote(vote));
+        Event eventToEdit = getEventObjectPerName(vote.getEventName());
+        if (vote.isLike()) {
+            eventToEdit.setLikes(eventToEdit.getLikes() + 1);
+        } else {
+            eventToEdit.setDislikes(eventToEdit.getDislikes() + 1);
+        }
+        repository.save(eventToEdit);
     }
 
     /**
@@ -79,7 +94,13 @@ public class EventService {
      * @throws NoSuchEvent Thrown when no event with given Name exists.
      */
     public void removeVote(final VoteDto vote) throws NoSuchEvent {
-        data.removeVote(convertVoteDtoToVote(vote));
+        Event eventToEdit = getEventObjectPerName(vote.getEventName());
+        if (vote.isLike()) {
+            eventToEdit.setLikes(eventToEdit.getLikes() - 1);
+        } else {
+            eventToEdit.setDislikes(eventToEdit.getDislikes() - 1);
+        }
+        repository.save(eventToEdit);
     }
 
     /**
@@ -89,7 +110,7 @@ public class EventService {
      * @return Events found in an EventDto Array
      */
     public EventDto[] searchForEventAfterLocation(final String searchQuery) {
-        return convertEventsToDtoArray(data.searchForEventAfterLocation(searchQuery));
+        return convertEventsToDtoArray(repository.searchAfterLocation(searchQuery));
     }
 
     /**
@@ -99,7 +120,7 @@ public class EventService {
      * @return Events found in an EventDto Array
      */
     public EventDto[] searchForEventAfterName(final String searchQuery) {
-        return convertEventsToDtoArray(data.searchForEventAfterName(searchQuery));
+        return convertEventsToDtoArray(repository.searchAfterName(searchQuery));
     }
 
     /**
@@ -109,17 +130,17 @@ public class EventService {
      * @return Events add Array Dtos
      */
     public EventDto[] getLastEvents(final int n) {
-        return convertEventsToDtoArray(data.getLastEvents(n));
+        Event[] tmpArray = repository.getLastEvents(n);
+        return convertEventsToDtoArray(tmpArray);
     }
 
     /**
      * Save the given Event to data store.
      *
      * @param event the event to save to data store
-     * @throws EventNameTaken - thrown when an event with the same name already exists
      */
-    public void saveEvent(final Event event) throws EventNameTaken {
-        data.saveEvent(event);
+    public void saveEvent(final Event event) {
+        repository.save(event);
     }
 
     /**
@@ -137,6 +158,17 @@ public class EventService {
                             final String eDate, final String eLocation,
                             final String eLongitude, final String eLatitude,
                             final String eDesc) {
+        // Check if name is available
+        boolean nameAvailable = false;
+        try {
+            getEventByName(eName);
+        } catch (NoSuchEvent e) {
+            nameAvailable = true;
+        }
+        if (!nameAvailable) {
+            throw new RuntimeException("Event Name taken.");
+        }
+
         // Check if type is valid
         String[] types = getTypes();
         boolean isValid = false;
@@ -176,22 +208,7 @@ public class EventService {
 
         // Create Event
         Event eventToSave = new Event(eName, eType, startDate, locationString, eDesc);
-        try {
-            saveEvent(eventToSave);
-        } catch (EventNameTaken e) {
-            throw new RuntimeException("Event name taken.");
-        }
-
-    }
-
-    /**
-     * Convert a VoteDto to a regular Vote Entity.
-     *
-     * @param voteDto VoteDto to transform
-     * @return Transformed Vote Entity
-     */
-    private Vote convertVoteDtoToVote(final VoteDto voteDto) {
-        return new Vote(voteDto.getEventName(), voteDto.isLike());
+        saveEvent(eventToSave);
     }
 
     /**
@@ -205,6 +222,14 @@ public class EventService {
                 event.getStartDate(), event.getCreationDate(),
                 event.getLocation(), event.getDescription(),
                 event.getLikes(), event.getDislikes());
+    }
+
+    private Event getEventObjectPerName(String eventName) throws NoSuchEvent {
+        Optional<Event> result = repository.findById(eventName);
+        if (!result.isPresent()) {
+            throw new NoSuchEvent("Event not found");
+        }
+        return result.get();
     }
 
     /**
