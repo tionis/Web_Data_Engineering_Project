@@ -19,7 +19,7 @@ public class Data {
     private final String DATABASE_PASSWORD = "";
     @Value("${types:}")
     private final String[] types = new String[]{"default", "education", "fun", "music"};
-
+    
     /**
      * Return the currently initialized types of events.
      *
