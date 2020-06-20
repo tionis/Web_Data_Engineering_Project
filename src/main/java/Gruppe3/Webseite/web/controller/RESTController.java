@@ -130,12 +130,8 @@ public class RESTController {
      */
     @PostMapping("/api/create")
     public ResponseEntity<Event> createEvent(@RequestBody final Event event) {
-        try {
-            eventService.saveEvent(event);
-            return ResponseEntity.ok(event);
-        } catch (EventNameTaken e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        eventService.saveEvent(event);
+        return ResponseEntity.ok(event);
     }
 
     /**
