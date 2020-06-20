@@ -1,10 +1,9 @@
 package Gruppe3.Webseite.web.controller;
 
-import Gruppe3.Webseite.application.exception.EventNameTaken;
-import Gruppe3.Webseite.application.service.EventService;
-import Gruppe3.Webseite.web.dto.EventDto;
-import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
+import Gruppe3.Webseite.application.service.EventService;
+import Gruppe3.Webseite.persistence.entities.Event;
+import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.web.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -130,8 +129,18 @@ public class RESTController {
      */
     @PostMapping("/api/create")
     public ResponseEntity<Event> createEvent(@RequestBody final Event event) {
-        eventService.saveEvent(event);
-        return ResponseEntity.ok(event);
+        boolean nameAvailable = false;
+        try {
+            eventService.getEventByName(event.getName());
+        } catch (NoSuchEvent e) {
+            nameAvailable = true;
+        }
+        if (nameAvailable) {
+            eventService.saveEvent(event);
+            return ResponseEntity.ok(event);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 
     /**

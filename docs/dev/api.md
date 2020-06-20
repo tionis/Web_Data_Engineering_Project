@@ -22,7 +22,7 @@ This Object represents a vote operation and consists of these values:
  Returns the last n events as an array with Event Objects.
 
 ### /api/event/EVENT_NAME_HERE
-Returns an event of this specific name, if it does not exist HTTP 400 is returned.
+Returns an event of this specific name, if it does not exist HTTP 404 is returned.
 
 ### /api/search/location?q=YOUR_VALUE_HERE
 Returns an array of events found for this search query after location.
@@ -44,5 +44,5 @@ Accepts a vote object to add to its event.
 Accepts a vote object to remove from its event.
 
 ### /api/create
-Accepts an event to save to data store. Returns HTTP 400 if it already exists.  
+Accepts an event to save to data store. Returns HTTP 409 if it already exists.  
 Returns the event as it was processed by the server.
