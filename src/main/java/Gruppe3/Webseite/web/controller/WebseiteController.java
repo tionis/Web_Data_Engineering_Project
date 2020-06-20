@@ -2,17 +2,11 @@ package Gruppe3.Webseite.web.controller;
 
 import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.web.dto.EventDto;
-import Gruppe3.Webseite.persistence.entities.Event;
-import Gruppe3.Webseite.persistence.repository.Data;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Controller
 public class WebseiteController {
