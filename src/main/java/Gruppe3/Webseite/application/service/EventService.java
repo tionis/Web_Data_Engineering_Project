@@ -110,8 +110,7 @@ public class EventService {
      * @return Events found in an EventDto Array
      */
     public EventDto[] searchForEventAfterLocation(final String searchQuery) {
-        // TODO
-        return new EventDto[]{};
+        return convertEventsToDtoArray(repository.searchAfterLocation(searchQuery));
     }
 
     /**
@@ -121,8 +120,7 @@ public class EventService {
      * @return Events found in an EventDto Array
      */
     public EventDto[] searchForEventAfterName(final String searchQuery) {
-        // TODO
-        return new EventDto[]{};
+        return convertEventsToDtoArray(repository.searchAfterName(searchQuery));
     }
 
     /**
@@ -140,9 +138,8 @@ public class EventService {
      * Save the given Event to data store.
      *
      * @param event the event to save to data store
-     * @throws EventNameTaken - thrown when an event with the same name already exists
      */
-    public void saveEvent(final Event event) throws EventNameTaken {
+    public void saveEvent(final Event event) {
         repository.save(event);
     }
 
@@ -161,6 +158,17 @@ public class EventService {
                             final String eDate, final String eLocation,
                             final String eLongitude, final String eLatitude,
                             final String eDesc) {
+        // Check if name is available
+        boolean nameAvailable = false;
+        try {
+            getEventByName(eName);
+        } catch (NoSuchEvent e) {
+            nameAvailable = true;
+        }
+        if (!nameAvailable) {
+            throw new RuntimeException("Event Name taken.");
+        }
+
         // Check if type is valid
         String[] types = getTypes();
         boolean isValid = false;
@@ -200,12 +208,7 @@ public class EventService {
 
         // Create Event
         Event eventToSave = new Event(eName, eType, startDate, locationString, eDesc);
-        try {
-            saveEvent(eventToSave);
-        } catch (EventNameTaken e) {
-            throw new RuntimeException("Event name taken.");
-        }
-
+        saveEvent(eventToSave);
     }
 
     /**

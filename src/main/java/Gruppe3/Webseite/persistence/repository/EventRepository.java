@@ -14,4 +14,10 @@ public interface EventRepository extends JpaRepository<Event, String> {
 
     @Query(value = "SELECT * FROM event ORDER BY creation_date DESC LIMIT :count", nativeQuery = true)
     Event[] getLastEvents(@Param("count") Integer count);
+
+    @Query(value = "SELECT * FROM event WHERE name LIKE :query", nativeQuery = true)
+    Event[] searchAfterName(@Param("query") String query);
+
+    @Query(value = "SELECT * FROM event WHERE location LIKE :query", nativeQuery = true)
+    Event[] searchAfterLocation(@Param("query") String query);
 }
