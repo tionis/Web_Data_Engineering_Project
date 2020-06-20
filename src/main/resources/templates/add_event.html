@@ -16,7 +16,19 @@
 
     <!-- Script for Website -->
     <script type="text/javascript">
-        function validate() {
+        async function sendForm() {
+            // Check availability of event
+            let urlName = encodeURI(document.forms["createEvent"]["eventName"].value);
+            let url = window.location.href;
+            let arr = url.split("/");
+            let host = arr[0] + "//" + arr[2];
+            let response = await fetch(host + "/api/event/" + urlName);
+            if (!response.ok) {
+                alert("Sorry, this name is taken, please choose another one");
+                return false;
+            }
+
+            // Check validity of event
             const location = document.forms["createEvent"]["eventLocation"].value;
             const latitude = document.forms["createEvent"]["latitude"].value;
             const longitude = document.forms["createEvent"]["longitude"].value;
@@ -25,23 +37,17 @@
                 alert("Please specify coordinates OR location name!");
                 return false;
             }
-
-            const now = new Date();
+            let now = new Date();
+            now.setHours(0, 0, 0, 0);
             if (Date.parse(date) < now) {
-                alert("Please specify a start date in the future!");
+                alert("Please specify a start date today or in the future!");
                 return false;
             }
             if (!location && (!latitude && !longitude)) {
                 alert("Please specify a location for the event")
                 return false;
             }
-            //let lat = parseFloat(latitude);
-            //let long = parseFloat(longitude);
-            //if (!(!isNaN(lat) && lat <= 90 && lat >= -90) && (!isNaN(long) && long <= 180 && long >= -180)) {
-            //    alert("Please specify valid coordinates!")
-            //    return false;
-            //}
-            return true;
+            document.forms["createEvent"].submit();
         }
     </script>
 
@@ -75,8 +81,7 @@
         <div class="col">
 
             <!-- Form -->
-            <form action="/" class="mt-4" onsubmit="return validate();"
-                  name="createEvent" method="post">
+            <form action="/" class="mt-4" name="createEvent" method="post">
                 <div class="form-group">
                     <label for="eventType">Typ</label>
 
@@ -103,9 +108,9 @@
                 <div class="form-group">
                     <label for="eventDate">Datum</label>
                     <input class="form-control" type="date" id="eventDate"
-                            th:value="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
-                            th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
-                            name="eDate" required>
+                           th:value="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                           th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                           name="eDate" required>
                 </div>
 
                 <div class="form-group">
@@ -130,7 +135,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit"
+                <button onclick="sendForm()"
                         class="btn btn-primary btn-lg btn-block mt-5">Hinzufügen
                 </button>
             </form>
