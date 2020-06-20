@@ -4,10 +4,11 @@ import Gruppe3.Webseite.model.Event;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 
-
 @Service
 public class Data {
- /**
+    // Public Methods
+
+    /**
      * Return the currently initialized types of events.
      *
      * @return List of Types
