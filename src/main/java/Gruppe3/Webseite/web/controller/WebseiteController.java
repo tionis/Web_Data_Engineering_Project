@@ -45,16 +45,8 @@ public class WebseiteController {
     @GetMapping("/")
     public String getHome(Model model) {
         String[] types = eventService.getTypes();
-        EventDto[] tempEvents = eventService.getLastEvents(20);
-        EventDto[] tempTopEvents = eventService.getTopEvents(3);
-
-        // Arrays of Dtos
-        EventDto[] events = new EventDto[tempEvents.length];
-        EventDto[] topEvents = new EventDto[tempTopEvents.length];
-
-        // Fill Array of Dtos with eventService
-        System.arraycopy(tempEvents, 0, events, 0, tempEvents.length);
-        System.arraycopy(tempTopEvents, 0, topEvents, 0, tempTopEvents.length);
+        EventDto[] events = eventService.getLastEvents(20);
+        EventDto[] topEvents = eventService.getTopEvents(3);
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         model.addAttribute("topEvents", topEvents);
