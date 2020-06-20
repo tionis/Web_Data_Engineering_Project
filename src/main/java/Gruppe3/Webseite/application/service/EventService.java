@@ -28,7 +28,7 @@ public class EventService {
      * The allowed event types.
      */
     @Value("${types:}")
-    private final String[] types = new String[]{};
+    private final String[] types;
 
     /**
      * Create a basic Event Service.
@@ -38,6 +38,7 @@ public class EventService {
     @Autowired
     public EventService(final EventRepository repository) {
         this.repository = repository;
+        types = new String[]{};
     }
 
     /**
