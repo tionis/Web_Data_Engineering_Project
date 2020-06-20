@@ -28,7 +28,7 @@ public class EventService {
      * The allowed event types.
      */
     @Value("${types:}")
-    private final String[] types = new String[]{"default", "education", "fun", "music"};
+    private final String[] types = new String[]{};
 
     /**
      * Create a basic Event Service.
