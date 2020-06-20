@@ -19,7 +19,7 @@ public class DataInit implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         String[] types = eventService.getTypes();
 
