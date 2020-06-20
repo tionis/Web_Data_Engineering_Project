@@ -28,7 +28,7 @@ public class RESTController {
      * Returns the last n events
      *
      * @param countString The event count to return as string
-     * @return Events with all associated metadata
+     * @return Events wrapped in response
      */
     @GetMapping("/api/events")
     public ResponseEntity<Event[]> events(@RequestParam(value = "n", defaultValue = "20") String countString) {
@@ -39,6 +39,21 @@ public class RESTController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.ok(data.getLastEvents(count));
+    }
+
+    /**
+     * Returns the specified event
+     *
+     * @param eventName The event count to return as string
+     * @return Event wrapped in response
+     */
+    @GetMapping("/api/event")
+    public ResponseEntity<Event> event(@RequestParam(value = "name") String eventName) {
+        try {
+            return ResponseEntity.ok(data.getEventByName(eventName));
+        } catch (NoSuchEvent e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     /**
