@@ -59,12 +59,8 @@ public class WebseiteController {
         EventDto[] topEvents = new EventDto[tempTopEvents.length];
 
         // Fill Array of Dtos with eventService
-        for (int i = 0; i < tempEvents.length; i++) {
-            events[i] = tempEvents[i];
-        }
-        for (int i = 0; i < tempTopEvents.length; i++) {
-            topEvents[i] = tempTopEvents[i];
-        }
+        System.arraycopy(tempEvents, 0, events, 0, tempEvents.length);
+        System.arraycopy(tempTopEvents, 0, topEvents, 0, tempTopEvents.length);
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         model.addAttribute("topEvents", topEvents);
@@ -113,38 +109,9 @@ public class WebseiteController {
 
         // Construct Site
         String[] types = eventService.getTypes();
-        Event[] events = convertToEventArray(eventService.getLastEvents(20));
+        EventDto[] events = eventService.getLastEvents(20);
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         return "home";
     }
-
-    private Event[] convertToEventArray(EventDto[] inputDtos) {
-        Event[] returnArray = new Event[inputDtos.length];
-        for (int i = 0; i < inputDtos.length; i++) {
-            returnArray[i] = convertToEvent(inputDtos[i]);
-        }
-        return returnArray;
-    }
-
-    /**
-     * Convert a given event dto to a event.
-     *
-     * @param eventDto EventDto to transform
-     * @return decoded event
-     */
-    private Event convertToEvent(EventDto eventDto) {
-        return new Event(eventDto.getName(), eventDto.getType(),
-                eventDto.getStartDate(), eventDto.getCreationDate(),
-                eventDto.getLocation(), eventDto.getDescription(),
-                eventDto.getLikes(), eventDto.getDislikes());
-    }
-
-    /*
-    @ExceptionHandler(NoSuchEvent.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public @ResponseBody NoSuchEvent handleException(NoSuchEvent e) {
-        return new NoSuchEvent("Event doesn't exist!");
-    }
-    */
 }
