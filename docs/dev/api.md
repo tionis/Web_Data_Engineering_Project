@@ -3,7 +3,7 @@
 ### Event Object
 An event object consists of following values (java like types included for understanding of valid values):
  - String name
- - String location (Can be anything, but normally contains city name or coordinates in ISO 6709 format)
+ - String location (Can be any name or coordinates)
  - Date statDate
  - Date creationDate
  - String name
@@ -44,4 +44,5 @@ Accepts a vote object to add to its event.
 Accepts a vote object to remove from its event.
 
 ### /api/create
-Accepts an event to save to datastore. Returns HTTP 400 if it alreay exists.
+Accepts an event to save to data store. Returns HTTP 400 if it already exists.  
+Returns the event as it was processed by the server.

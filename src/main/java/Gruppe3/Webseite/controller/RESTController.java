@@ -130,7 +130,7 @@ public class RESTController {
     public ResponseEntity<Event> createEvent(@RequestBody final Event event) {
         try {
             data.saveEvent(event);
-            return ResponseEntity.ok(data.getEventByName(event.getName()));
+            return ResponseEntity.ok(event);
         } catch (NoSuchEvent e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
