@@ -1,42 +1,46 @@
 package Gruppe3.Webseite.persistence.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
-public final class Event {
+@Entity
+public class Event {
 
     /**
      * Name of the event.
      */
-    private final String name;
+    @Id
+    private String name;
     /**
      * Type of event this is.
      */
-    private final String type;
+    private String type;
     /**
      * Location where the event takes place, this is either a place name or
      * coordinates.
      */
-    private final String location;
+    private String location;
     /**
      * Date the event starts.
      */
-    private final Date startDate;
+    private Date startDate;
     /**
      * Date the event was created.
      */
-    private final Date creationDate;
+    private Date creationDate;
     /**
      * Full Description of the event.
      */
-    private final String description;
+    private String description;
     /**
      * Amount of Dislikes of this event.
      */
-    private final int dislikes;
+    private int dislikes;
     /**
      * Amount of likes of this event.
      */
-    private final int likes;
+    private int likes;
 
     /**
      * Dummy constructor
@@ -147,6 +151,38 @@ public final class Event {
 
     public int getDislikes() {
         return dislikes;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override
