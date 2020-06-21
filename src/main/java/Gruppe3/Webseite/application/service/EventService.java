@@ -1,6 +1,5 @@
 package Gruppe3.Webseite.application.service;
 
-import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.repository.EventRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -111,7 +109,8 @@ public class EventService {
      * @return Events found in an EventDto Array
      */
     public EventDto[] searchForEventAfterLocation(final String searchQuery) {
-        return convertEventsToDtoArray(repository.searchAfterLocation(searchQuery));
+        return convertEventsToDtoArray(
+                repository.searchAfterLocation(searchQuery));
     }
 
     /**
@@ -199,16 +198,19 @@ public class EventService {
             if (!eLatitude.isEmpty() && !eLongitude.isEmpty()) {
                 locationString = eLatitude + " " + eLongitude;
             } else {
-                throw new RuntimeException("Only one of the coordinates specified");
+                throw new RuntimeException(
+                        "Only one of the coordinates specified");
             }
         } else if (eLatitude.isEmpty() && eLongitude.isEmpty()) {
             locationString = eLocation;
         } else {
-            throw new RuntimeException("Both location and coordinates specified");
+            throw new RuntimeException(
+                    "Both location and coordinates specified");
         }
 
         // Create Event
-        Event eventToSave = new Event(eName, eType, startDate, locationString, eDesc);
+        Event eventToSave =
+                new Event(eName, eType, startDate, locationString, eDesc);
         saveEvent(eventToSave);
     }
 

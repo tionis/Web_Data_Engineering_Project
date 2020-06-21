@@ -81,7 +81,8 @@ public class RESTController {
      * @return Event wrapped in response
      */
     @GetMapping("/api/event/{eventName}")
-    public ResponseEntity<EventDto> event(@PathVariable final String eventName) {
+    public ResponseEntity<EventDto> event(
+            @PathVariable final String eventName) {
         try {
             return ResponseEntity.ok(eventService.getEventByName(eventName));
         } catch (NoSuchEvent e) {
@@ -99,7 +100,8 @@ public class RESTController {
     public ResponseEntity<EventDto> addVote(@RequestBody final VoteDto vote) {
         try {
             eventService.addVote(vote);
-            return ResponseEntity.ok(eventService.getEventByName(vote.getEventName()));
+            return ResponseEntity.ok(
+                    eventService.getEventByName(vote.getEventName()));
         } catch (NoSuchEvent e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -112,10 +114,12 @@ public class RESTController {
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/vote/remove")
-    public ResponseEntity<EventDto> removeVote(@RequestBody final VoteDto vote) {
+    public ResponseEntity<EventDto> removeVote(
+            @RequestBody final VoteDto vote) {
         try {
             eventService.removeVote(vote);
-            return ResponseEntity.ok(eventService.getEventByName(vote.getEventName()));
+            return ResponseEntity.ok(
+                    eventService.getEventByName(vote.getEventName()));
         } catch (NoSuchEvent e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
