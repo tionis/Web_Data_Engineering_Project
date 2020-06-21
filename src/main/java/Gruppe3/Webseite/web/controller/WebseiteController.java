@@ -10,27 +10,38 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class WebseiteController {
+    /**
+     * Amount of last events to show.
+     */
+    int lastEventCount = 20;
+    /**
+     * Amount of top events to show.
+     */
+    int topEventCount = 3;
 
+    /**
+     * Service to communicate with rest of application.
+     */
     private final EventService eventService;
 
     /**
-     * Constructs a WebseiteController
+     * Constructs a WebseiteController.
      *
      * @param eventService The eventService object for service methods
      */
     @Autowired
-    public WebseiteController(EventService eventService) {
+    public WebseiteController(final EventService eventService) {
         this.eventService = eventService;
     }
 
     /**
      * Handles GET requests on path "/add".
      *
-     * @param model Model that transfers eventService between controller and view
+     * @param model Model that transfers event between controller and view
      * @return The form page template.
      */
     @GetMapping("/add")
-    public String addEvent(Model model) {
+    public String addEvent(final Model model) {
         String[] types = eventService.getTypes();
         model.addAttribute("types", types);
         return "add_event";
@@ -39,14 +50,14 @@ public class WebseiteController {
     /**
      * Handles GET requests on path "/".
      *
-     * @param model Model that transfers eventService between controller and view
+     * @param model Model that transfers event between controller and view
      * @return The home page template.
      */
     @GetMapping("/")
-    public String getHome(Model model) {
+    public String getHome(final Model model) {
         String[] types = eventService.getTypes();
-        EventDto[] events = eventService.getLastEvents(20);
-        EventDto[] topEvents = eventService.getTopEvents(3);
+        EventDto[] events = eventService.getLastEvents(lastEventCount);
+        EventDto[] topEvents = eventService.getTopEvents(topEventCount);
         model.addAttribute("types", types);
         model.addAttribute("events", events);
         model.addAttribute("topEvents", topEvents);
@@ -57,19 +68,35 @@ public class WebseiteController {
      * Handles GET requests on path "/event/{eventname}".
      *
      * @param model Model that transfers eventService between controller and view
-     * @param id    Eventname
+     * @param id    Event name
      * @return The event detail page.
      */
     @GetMapping("/event/{id}")
     public String getEvent(Model model, @PathVariable String id) {
-        EventDto event = null;
+        EventDto event;
         try {
             event = eventService.getEventByName(id);
         } catch (NoSuchEvent e) {
-            //TODO HTTP 404 ERROR
+            return "error/404";
         }
         model.addAttribute("event", event);
         return "event_detail";
+    }
+
+    /**
+     * Handles GET search requests on path "/search".
+     *
+     * @param model Model that transfers eventService between controller and view
+     * @param query Querystring
+     * @return The search result page.
+     */
+    @GetMapping("/search")
+    public String getSearch(@RequestParam(value = "q") Model model, String query) {
+        EventDto[] locations = eventService.searchForEventAfterLocation(query);
+        EventDto[] names = eventService.searchForEventAfterName(query);
+        model.addAttribute("location", locations);
+        model.addAttribute("name", names);
+        return "search_results";
     }
 
     /**
