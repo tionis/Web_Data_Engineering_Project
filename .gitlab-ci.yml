@@ -11,4 +11,4 @@ build:
   script: ./mvnw package
   artifacts:
     paths:
-      - target/Webseite-0.0.1-SNAPSHOT.jar
+      - target/Webseite-1.0.jar
