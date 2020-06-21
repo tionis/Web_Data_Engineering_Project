@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+
+    <!-- jQuery include -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+
+    <!-- Script for Website -->
+    <script type="text/javascript" th:inline="JavaScript">
+        const host = window.location.protocol + "//" + window.location.host;
+        let currentVote = localStorage.getItem("vote-" + [[${event.name}]]);
+
+        async function load() {
+            if (currentVote === "like") {
+                document.getElementById("like-button").className = "btn btn-success btn-block";
+            } else if (currentVote === "dislike") {
+                document.getElementById("dislike-button").className = "btn btn-danger btn-block";
+            }
+            let weatherElement = document.getElementById("weather");
+            let location = document.getElementById("location").innerText;
+            let date = Date.parse(document.getElementById("date").innerText);
+            let DateInOneWeek = new Date;
+            Date.now();
+            DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
+            console.log(document.getElementById("date").innerText)
+            console.log("date:" + date)
+            // ToDo Fix date parsing
+            // ToDo Seperate year month and day
+            // ToDo test everything
+            console.log("date++:" + Date.parse(DateInOneWeek))
+            if (date < Date.parse(DateInOneWeek)) {
+                let url;
+                if (location.includes("|")) {
+                    let coords = location.split("|")
+                    url = "/api/location/search/?lattlong=" + coords[0] + "," + coords[1]
+                } else {
+                    url = "/api/location/search/?query=" + location;
+                }
+                let woeid = (await fetch("https://metaweather.com" + url)).json().woeid;
+                let year = 2020;
+                let month = 6;
+                let day = 21;
+                let weather = (await fetch("https://metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/")).json();
+                weatherElement.innerText(weather.consolidated_weather.weather_state_name);
+            } else {
+                weatherElement.innerText = "No weather available!"
+            }
+        }
+
+        async function like() {
+            if (currentVote === "like") {
+                showError("You already liked this!")
+                return;
+            }
+            if (currentVote === "dislike") {
+                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
+                await updateVote(false, false)
+            }
+            currentVote = "like";
+            document.getElementById("like-button").className = "btn btn-success btn-block";
+            localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+            await updateVote(true, true)
+
+        }
+
+        async function dislike() {
+            if (currentVote === "dislike") {
+                showError("You already disliked this!")
+                return;
+            }
+            if (currentVote === "like") {
+                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
+                await updateVote(false, true)
+            }
+            currentVote = "dislike";
+            document.getElementById("dislike-button").className = "btn btn-danger btn-block";
+            localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+            await updateVote(true, false)
+        }
+
+        async function updateVote(isAdd, isVoteLike) {
+            let endpoint = "/api/vote/add";
+            if (isAdd === false) {
+                endpoint = "/api/vote/remove";
+            }
+            let vote = {eventName: [[${event.name}]], isLike: isVoteLike};
+            let response = await fetch(host + endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(vote)
+            });
+            if (response.ok) {
+                let event = await response.json();
+                document.getElementById("likes").innerText = event.likes;
+                document.getElementById("dislikes").innerText = event.dislikes;
+            } else {
+                alert("Error processing your Vote!")
+            }
+        }
+
+        function showError(message) {
+            let x = document.getElementById("error-snackbar");
+            x.innerText = message;
+            x.className = "show";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
+    </script>
+    <style>
+        #error-snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #error-snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
+    <title th:text="${event.name}"></title>
+</head>
+<body onload="load()">
+
+<!-- Site Container -->
+<div class="container">
+
+    <!-- Backbutton -->
+    <div class="row pt-5 pb-5">
+        <div class="col">
+            <button class="btn btn-link p-0" type="button"
+                    onclick="location.href='/';">&larr; zurück zur Startseite
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="row ">
+
+
+        <div class="col-md-8">
+            <h2 th:text="${event.name}">Name</h2>
+            <h4 class="pb-2" th:text="${event.type}">Typ</h4>
+
+            <p><span class="font-weight-bold">Beschreibung: </span><span
+                    th:text="${event.description}"></span></p>
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="row">
+                <div class="col order-md-1">
+                    <p><span class="font-weight-bold">Datum: </span>
+                        <span th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}"
+                              id="date"></span>
+                    </p>
+                    <p class="pb-4"><span
+                            class="font-weight-bold">Ort: </span>
+                        <span th:text="${event.location}" id="location"></span>
+                    </p>
+                    <p class="pb-4"><span
+                            class="font-weight-bold">Wetter: </span>
+                        <span id="weather"></span></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button type="button" id="like-button" onclick="like()"
+                            class="btn btn-outline-success btn-block">&#128077;
+                    </button>
+                    <p th:text="${event.likes}" id="likes">#likes</p>
+                </div>
+                <div class="col text-center">
+                    <button type="button" id="dislike-button"
+                            onclick="dislike()"
+                            class="btn btn-outline-danger btn-block">&#128078;
+                    </button>
+                    <p th:text="${event.dislikes}" id="dislikes">#dislikes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-snackbar">Some text some message..</div>
+</div>
+</body>
+</html>

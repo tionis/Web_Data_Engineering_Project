@@ -1,6 +1,7 @@
 package Gruppe3.Webseite.application.service;
 
 import Gruppe3.Webseite.application.exception.EventNameTaken;
+import Gruppe3.Webseite.application.exception.InvalidVote;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.repository.EventRepository;
@@ -93,12 +94,20 @@ public class EventService {
      * @param vote The vote to remove from data store
      * @throws NoSuchEvent Thrown when no event with given Name exists.
      */
-    public void removeVote(final VoteDto vote) throws NoSuchEvent {
+    public void removeVote(final VoteDto vote) throws NoSuchEvent, InvalidVote {
         Event eventToEdit = getEventObjectPerName(vote.getEventName());
         if (vote.isLike()) {
-            eventToEdit.setLikes(eventToEdit.getLikes() - 1);
+            int currentLikes = eventToEdit.getLikes();
+            if (currentLikes <= 0) {
+                throw new InvalidVote("Vote would set likes below 0");
+            }
+            eventToEdit.setLikes(currentLikes - 1);
         } else {
-            eventToEdit.setDislikes(eventToEdit.getDislikes() - 1);
+            int currentDislikes = eventToEdit.getLikes();
+            if (currentDislikes <= 0) {
+                throw new InvalidVote("Vote would set likes below 0");
+            }
+            eventToEdit.setDislikes(currentDislikes - 1);
         }
         repository.save(eventToEdit);
     }
