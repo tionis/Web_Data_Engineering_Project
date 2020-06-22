@@ -11,9 +11,9 @@ Nevertheless, release tags shall be used when appropriate.
 Branches should(next to the master and develop branch) follow this naming convention: type/descriptor  
 
 Following types can be used:
- - feat: Feature I'm adding or expanding
+ - feat: Feature adding or expanding
  - fix: Bug fix or experiment
- - wip: Works in progress; stuff I know won't be finished soon
+ - wip: Works in progress
  - junk: Throwaway branch created to experiment
  
 The descriptor can be any valid git branch name, as long as it is short and descriptive.
@@ -23,6 +23,7 @@ Commits shall be written after conventions from [Conventional Commits](https://w
  - fix: bug fixes
  - feat: added features
  - docs: documentation
+ - wip: work in progress (e.g. commits that are needed for debugging and collaboration)
  - chore: housekeeping
  - style: style improvements
  - refactor: code refactors
