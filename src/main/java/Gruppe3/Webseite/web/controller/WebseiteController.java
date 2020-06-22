@@ -1,6 +1,8 @@
 package Gruppe3.Webseite.web.controller;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.service.EventService;
+import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,11 +117,14 @@ public class WebseiteController {
     @RequestMapping(method = {RequestMethod.POST}, value = "/")
     public String createEvent(Model model, @RequestParam String eType, @RequestParam String eName,
                               @RequestParam String eDesc, @RequestParam String eDate,
-                              @RequestParam String eLocation, @RequestParam String eLongitude,
-                              @RequestParam String eLatitude) {
+                              @RequestParam String eLocation, @RequestParam String eLatitude,
+                              @RequestParam String eLongitude) {
         // Parse Event
-        eventService.createEvent(eName, eType, eDate, eLocation, eLongitude, eLatitude, eDesc);
-
+        try {
+            eventService.createEvent(eName, eType, eDate, eLocation, eLatitude, eLongitude, eDesc);
+        } catch (EventNameTaken e) {
+            throw new RuntimeException("Event name taken");
+        }
         // Construct Site
         String[] types = eventService.getTypes();
         EventDto[] events = eventService.getLastEvents(20);

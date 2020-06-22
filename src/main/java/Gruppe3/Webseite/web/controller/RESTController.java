@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.web.controller;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.persistence.entities.Event;
@@ -132,18 +133,19 @@ public class RESTController {
      * @return Modified event wrapped in response
      */
     @PostMapping("/api/create")
-    public ResponseEntity<Event> createEvent(@RequestBody final Event event) {
-        boolean nameAvailable = false;
+    public ResponseEntity<EventDto> createEvent(@RequestBody final Event event) {
         try {
-            eventService.getEventByName(event.getName());
-        } catch (NoSuchEvent e) {
-            nameAvailable = true;
-        }
-        if (nameAvailable) {
-            eventService.saveEvent(event);
-            return ResponseEntity.ok(event);
-        } else {
+            eventService.createEvent(event.getName(), event.getType(),
+                    event.getStartDate().toString(), event.getLocation(),
+                    event.getLatitude().toString(),
+                    event.getLongitude().toString(), event.getDescription());
+        } catch (EventNameTaken e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+        try {
+            return ResponseEntity.ok(eventService.getEventByName(event.getName()));
+        } catch (NoSuchEvent e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
