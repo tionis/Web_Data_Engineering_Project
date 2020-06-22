@@ -126,10 +126,6 @@ public class WebseiteController {
             throw new RuntimeException("Event name taken");
         }
         // Construct Site
-        String[] types = eventService.getTypes();
-        EventDto[] events = eventService.getLastEvents(20);
-        model.addAttribute("types", types);
-        model.addAttribute("events", events);
-        return "home";
+        return getHome(model);
     }
 }

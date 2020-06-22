@@ -27,17 +27,18 @@
             }
             let weatherElement = document.getElementById("weather");
             let location = document.getElementById("location").innerText;
-            let date = Date.parse(document.getElementById("date").innerText);
+            let dateString = document.getElementById("date").innerText;
+            let dateSplit = dateString.split(".");
+            let year = dateSplit[2];
+            let month = dateSplit[1];
+            let day = dateSplit[0];
+            console.log(day + "." + month + "." + year)
+            let date = new Date(year, month - 1, day)
             let DateInOneWeek = new Date;
-            Date.now();
             DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
-            console.log(document.getElementById("date").innerText)
-            console.log("date:" + date)
-            // ToDo Fix date parsing
-            // ToDo Seperate year month and day
-            // ToDo test everything
-            console.log("date++:" + Date.parse(DateInOneWeek))
-            if (date < Date.parse(DateInOneWeek)) {
+            console.log(date)
+            console.log(DateInOneWeek)
+            if (date < DateInOneWeek) {
                 let url;
                 if (location.includes("|")) {
                     let coords = location.split("|")
@@ -45,12 +46,22 @@
                 } else {
                     url = "/api/location/search/?query=" + location;
                 }
-                let woeid = (await fetch("https://metaweather.com" + url)).json().woeid;
-                let year = 2020;
-                let month = 6;
-                let day = 21;
-                let weather = (await fetch("https://metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/")).json();
-                weatherElement.innerText(weather.consolidated_weather.weather_state_name);
+                let options = {
+                    mode: "no-cors"
+                }
+                let response1 = await fetch("https://www.metaweather.com" + url, options)
+                if (response1.ok) {
+                    let woeid = response1.json().woeid;
+                    let response2 = await fetch("https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/", options);
+                    if (response2.ok) {
+                        let weather = response2.json();
+                        weatherElement.innerText(weather.consolidated_weather.weather_state_name);
+                    } else {
+                        weatherElement.innerText = "Could not get weather!"
+                    }
+                } else {
+                    weatherElement.innerText = "Could not get weather: " + response1.statusText;
+                }
             } else {
                 weatherElement.innerText = "No weather available!"
             }
@@ -62,8 +73,8 @@
                 return;
             }
             if (currentVote === "dislike") {
-                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
                 await updateVote(false, false)
+                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
             }
             currentVote = "like";
             document.getElementById("like-button").className = "btn btn-success btn-block";
@@ -78,8 +89,8 @@
                 return;
             }
             if (currentVote === "like") {
-                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
                 await updateVote(false, true)
+                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
             }
             currentVote = "dislike";
             document.getElementById("dislike-button").className = "btn btn-danger btn-block";
