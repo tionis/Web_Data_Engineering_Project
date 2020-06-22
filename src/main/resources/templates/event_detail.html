@@ -70,6 +70,25 @@
                 if (!response2.ok) {
                     weatherError(weatherElement);
                     return;
+                console.log("Now calling https://www.metaweather.com" + url)
+                let response1 = await fetch("https://www.metaweather.com" + url, options)
+                console.log("First API Call Response:")
+                console.log(response1);
+                if (response1.ok) {
+                    let woeid = response1.json().woeid;
+                    let response2 = await fetch("https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/", options);
+                    console.log("Second API Call Response:\n");
+                    console.log(response1);
+                    if (response2.ok) {
+                        let weather = response2.json();
+                        weatherElement.innerText(weather.consolidated_weather.weather_state_name);
+                    } else {
+                        weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
+                    }
+                } else {
+                    console.log("Response was not ok, aborting further execution...")
+                    weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
+
                 }
                 let weather = await response2.json();
                 console.log(weather);
