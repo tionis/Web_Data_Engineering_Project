@@ -25,6 +25,10 @@
             } else if (currentVote === "dislike") {
                 document.getElementById("dislike-button").className = "btn btn-danger btn-block";
             }
+            await loadWeather();
+        }
+
+        async function loadWeather() {
             let weatherElement = document.getElementById("weather");
             let location = document.getElementById("location").innerText;
             let dateString = document.getElementById("date").innerText;
@@ -36,9 +40,8 @@
             let date = new Date(year, month - 1, day)
             let DateInOneWeek = new Date;
             DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
-            console.log(date)
-            console.log(DateInOneWeek)
             if (date < DateInOneWeek) {
+                console.log("Detected date in range, executing getWeather...")
                 let url;
                 if (location.includes("|")) {
                     let coords = location.split("|")
@@ -46,24 +49,28 @@
                 } else {
                     url = "/api/location/search/?query=" + location;
                 }
-                let options = {
-                    mode: "no-cors"
-                }
-                let response1 = await fetch("https://www.metaweather.com" + url, options)
+                console.log("Now calling https://www.metaweather.com" + url)
+                let response1 = await fetch("https://www.metaweather.com" + url)
+                console.log("First API Call Response:")
+                console.log(response1);
                 if (response1.ok) {
                     let woeid = response1.json().woeid;
-                    let response2 = await fetch("https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/", options);
+                    let response2 = await fetch("https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
+                    console.log("Second API Call Response:\n");
+                    console.log(response1);
                     if (response2.ok) {
                         let weather = response2.json();
                         weatherElement.innerText(weather.consolidated_weather.weather_state_name);
                     } else {
-                        weatherElement.innerText = "Could not get weather!"
+                        weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
                     }
                 } else {
-                    weatherElement.innerText = "Could not get weather: " + response1.statusText;
+                    console.log("Response was not ok, aborting further execution...")
+                    weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
                 }
             } else {
-                weatherElement.innerText = "No weather available!"
+                console.log("Response was not ok, aborting further execution...")
+                weatherElement.innerText = "No weather available.";
             }
         }
 
