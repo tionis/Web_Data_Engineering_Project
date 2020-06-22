@@ -17,10 +17,20 @@ public class Event {
      */
     private String type;
     /**
-     * Location where the event takes place, this is either a place name or
-     * coordinates.
+     * Location where the event takes place if no coordinates are specified.
      */
     private String location;
+
+    /**
+     * Longitude of the location if no location string is given.
+     */
+    private Double longitude;
+
+    /**
+     * Latitude of the location if no location string is given.
+     */
+    private Double latitude;
+
     /**
      * Date the event starts.
      */
@@ -48,6 +58,8 @@ public class Event {
     public Event() {
         this.type = "";
         this.location = "";
+        this.longitude = null;
+        this.latitude = null;
         this.startDate = new Date();
         this.name = "";
         this.description = "";
@@ -55,6 +67,7 @@ public class Event {
         dislikes = 0;
         likes = 0;
     }
+
 
     /**
      * Create event by specifying all parameters but votes and creation date.
@@ -69,6 +82,59 @@ public class Event {
                  final String location, final String description) {
         this.type = type;
         this.location = location;
+        this.latitude = null;
+        this.longitude = null;
+        this.startDate = startDate;
+        this.name = name;
+        this.description = description;
+        this.creationDate = new Date();
+        dislikes = 0;
+        likes = 0;
+    }
+
+    /**
+     * Create event by specifying all parameters but votes and creation date.
+     *
+     * @param type        Type of event to create
+     * @param location    Location of the created event
+     * @param longitude   Longitude of the event location
+     * @param latitude    Latitude of the event location
+     * @param startDate   Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String name, final String type, final Date startDate,
+                 final String location, final Double latitude,
+                 final Double longitude, final String description) {
+        this.type = type;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.startDate = startDate;
+        this.name = name;
+        this.description = description;
+        this.creationDate = new Date();
+        dislikes = 0;
+        likes = 0;
+    }
+
+    /**
+     * Create event by specifying all parameters but votes and creation date.
+     *
+     * @param type        Type of event to create
+     * @param longitude   Longitude of the event location
+     * @param latitude    Latitude of the event location
+     * @param startDate   Date the event starts
+     * @param name        Name of the Event
+     * @param description Full description for the event
+     */
+    public Event(final String name, final String type, final Date startDate,
+                 final Double longitude, final Double latitude,
+                 final String description) {
+        this.type = type;
+        this.location = null;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.startDate = startDate;
         this.name = name;
         this.description = description;
@@ -104,15 +170,20 @@ public class Event {
      *
      * @param type        Type of event to create
      * @param location    Location of the created event
+     * @param latitude    Latitude of event if specified
+     * @param longitude   Longitude of event if specified
      * @param startDate   Date the event starts
      * @param name        Name of the Event
      * @param description Full description for the event
      */
     public Event(final String name, final String type, final Date startDate,
                  final Date creationDate, final String location,
+                 final Double latitude, final Double longitude,
                  final String description, final int likes, final int dislikes) {
         this.type = type;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.startDate = startDate;
         this.name = name;
         this.description = description;
@@ -127,6 +198,14 @@ public class Event {
 
     public String getLocation() {
         return location;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
     }
 
     public Date getStartDate() {
@@ -163,6 +242,14 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public void setStartDate(Date startDate) {

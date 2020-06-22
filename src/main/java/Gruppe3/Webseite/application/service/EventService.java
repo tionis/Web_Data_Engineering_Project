@@ -1,5 +1,6 @@
 package Gruppe3.Webseite.application.service;
 
+import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.persistence.repository.EventRepository;
@@ -157,7 +158,7 @@ public class EventService {
     public void createEvent(final String eName, final String eType,
                             final String eDate, final String eLocation,
                             final String eLongitude, final String eLatitude,
-                            final String eDesc) {
+                            final String eDesc) throws EventNameTaken {
         // Check if name is available
         boolean nameAvailable = false;
         try {
@@ -166,7 +167,7 @@ public class EventService {
             nameAvailable = true;
         }
         if (!nameAvailable) {
-            throw new RuntimeException("Event Name taken.");
+            throw new EventNameTaken();
         }
 
         // Check if type is valid
@@ -193,10 +194,18 @@ public class EventService {
         }
 
         // Create location string by checking if both field are used
-        String locationString;
+        String locationString = null;
+        Double longitude = null;
+        Double latitude = null;
         if (eLocation.isEmpty()) {
             if (!eLatitude.isEmpty() && !eLongitude.isEmpty()) {
-                locationString = eLatitude + " " + eLongitude;
+                try {
+                    latitude = Double.parseDouble(eLatitude);
+                    longitude = Double.parseDouble(eLongitude);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(
+                            "Longitude or Latitude invalid.");
+                }
             } else {
                 throw new RuntimeException(
                         "Only one of the coordinates specified");
@@ -210,7 +219,8 @@ public class EventService {
 
         // Create Event
         Event eventToSave =
-                new Event(eName, eType, startDate, locationString, eDesc);
+                new Event(eName, eType, startDate,
+                        locationString, latitude, longitude, eDesc);
         saveEvent(eventToSave);
     }
 
@@ -223,11 +233,13 @@ public class EventService {
     private EventDto convertEventToDto(final Event event) {
         return new EventDto(event.getName(), event.getType(),
                 event.getStartDate(), event.getCreationDate(),
-                event.getLocation(), event.getDescription(),
-                event.getLikes(), event.getDislikes());
+                event.getLocation(), event.getLatitude(), event.getLongitude(),
+                event.getDescription(), event.getLikes(),
+                event.getDislikes());
     }
 
-    private Event getEventObjectPerName(String eventName) throws NoSuchEvent {
+    private Event getEventObjectPerName(final String eventName)
+            throws NoSuchEvent {
         Optional<Event> result = repository.findById(eventName);
         if (!result.isPresent()) {
             throw new NoSuchEvent("Event not found");
