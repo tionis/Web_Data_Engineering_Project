@@ -15,9 +15,19 @@ public class EventDto {
     private final String type;
 
     /**
-     * Location of the event.
+     * Location of the event if no coordinates are given.
      */
     private final String location;
+
+    /**
+     * Longitude of the event
+     */
+    private final Double longitude;
+
+    /**
+     * Latitude of the event.
+     */
+    private final Double latitude;
 
     /**
      * Date the event starts on.
@@ -51,16 +61,21 @@ public class EventDto {
      * @param type         Type of the event to create
      * @param startDate    startDate of the event to create
      * @param creationDate creationDate of the event
-     * @param location     location of the event
+     * @param location     location of the event if no coordinates are specified
+     * @param longitude    longitude of the event
+     * @param latitude     latitude of the event
      * @param description  description of the event
      * @param likes        likes so far
      * @param dislikes     dislikes so far
      */
     public EventDto(final String name, final String type, final Date startDate,
                     final Date creationDate, final String location,
+                    final Double longitude, final Double latitude,
                     final String description, final int likes, final int dislikes) {
         this.type = type;
         this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.startDate = startDate;
         this.creationDate = creationDate;
         this.name = name;
@@ -79,6 +94,14 @@ public class EventDto {
 
     public String getLocation() {
         return location;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
     }
 
     public Date getStartDate() {

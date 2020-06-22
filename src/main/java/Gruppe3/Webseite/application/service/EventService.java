@@ -193,10 +193,17 @@ public class EventService {
         }
 
         // Create location string by checking if both field are used
-        String locationString;
+        String locationString = null;
+        Double longitude = null;
+        Double latitude = null;
         if (eLocation.isEmpty()) {
             if (!eLatitude.isEmpty() && !eLongitude.isEmpty()) {
-                locationString = eLatitude + " " + eLongitude;
+                try {
+                    latitude = Double.parseDouble(eLatitude);
+                    longitude = Double.parseDouble(eLongitude);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Longitude or Latitude invalid.");
+                }
             } else {
                 throw new RuntimeException(
                         "Only one of the coordinates specified");
@@ -210,7 +217,8 @@ public class EventService {
 
         // Create Event
         Event eventToSave =
-                new Event(eName, eType, startDate, locationString, eDesc);
+                new Event(eName, eType, startDate,
+                        locationString, longitude, latitude, eDesc);
         saveEvent(eventToSave);
     }
 
@@ -223,8 +231,8 @@ public class EventService {
     private EventDto convertEventToDto(final Event event) {
         return new EventDto(event.getName(), event.getType(),
                 event.getStartDate(), event.getCreationDate(),
-                event.getLocation(), event.getDescription(),
-                event.getLikes(), event.getDislikes());
+                event.getLocation(), event.getLongitude(), event.getLatitude()
+                , event.getDescription(), event.getLikes(), event.getDislikes());
     }
 
     private Event getEventObjectPerName(String eventName) throws NoSuchEvent {
