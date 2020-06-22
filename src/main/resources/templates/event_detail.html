@@ -36,12 +36,10 @@
             let year = dateSplit[2];
             let month = dateSplit[1];
             let day = dateSplit[0];
-            console.log(day + "." + month + "." + year)
             let date = new Date(year, month - 1, day)
             let DateInOneWeek = new Date;
             DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
             if (date < DateInOneWeek) {
-                console.log("Detected date in range, executing getWeather...")
                 let url;
                 if (location.includes("|")) {
                     let coords = location.split("|")
@@ -51,22 +49,17 @@
                 }
                 // Using proxy, as api we should use doesnt have a CORS Header
                 let response1 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com" + url)
-                console.log("First API Call Response:")
-                console.log(response1);
                 if (!response1.ok) {
                     weatherError(weatherElement);
                     return;
                 }
                 let result = await response1.json();
-                console.log(result)
                 let woeid = result[0].woeid;
                 if (typeof woeid == 'undefined') {
                     weatherError(weatherElement);
                     return;
                 }
                 let response2 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
-                console.log("Second API Call Response:\n");
-                console.log(response1);
                 if (!response2.ok) {
                     weatherError(weatherElement);
                     return;
@@ -91,6 +84,7 @@
 
                 }
                 let weather = await response2.json();
+                console.log("Weather Object:");
                 console.log(weather);
                 if (typeof weather == 'undefined') {
                     weatherError(weatherElement);
