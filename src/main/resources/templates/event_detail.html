@@ -49,29 +49,48 @@
                 } else {
                     url = "/api/location/search/?query=" + location;
                 }
-                console.log("Now calling https://www.metaweather.com" + url)
-                let response1 = await fetch("https://www.metaweather.com" + url)
+                // Using proxy, as api we should use doesnt have a CORS Header
+                let response1 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com" + url)
                 console.log("First API Call Response:")
                 console.log(response1);
-                if (response1.ok) {
-                    let woeid = response1.json().woeid;
-                    let response2 = await fetch("https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
-                    console.log("Second API Call Response:\n");
-                    console.log(response1);
-                    if (response2.ok) {
-                        let weather = response2.json();
-                        weatherElement.innerText(weather.consolidated_weather.weather_state_name);
-                    } else {
-                        weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
-                    }
-                } else {
-                    console.log("Response was not ok, aborting further execution...")
-                    weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
+                if (!response1.ok) {
+                    weatherError(weatherElement);
+                    return;
                 }
+                let result = await response1.json();
+                console.log(result)
+                let woeid = result[0].woeid;
+                if (typeof woeid == 'undefined') {
+                    weatherError(weatherElement);
+                    return;
+                }
+                let response2 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
+                console.log("Second API Call Response:\n");
+                console.log(response1);
+                if (!response2.ok) {
+                    weatherError(weatherElement);
+                    return;
+                }
+                let weather = await response2.json();
+                console.log(weather);
+                if (typeof weather == 'undefined') {
+                    weatherError(weatherElement);
+                    return;
+                }
+                if (typeof weather[0].weather_state_name == 'undefined') {
+                    weatherError(weatherElement);
+                    return;
+                }
+                weatherElement.innerText = weather[0].weather_state_name;
             } else {
                 console.log("Response was not ok, aborting further execution...")
                 weatherElement.innerText = "No weather available.";
             }
+        }
+
+        function weatherError(weatherElement) {
+            console.log("Error while getting weather!")
+            weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
         }
 
         async function like() {
