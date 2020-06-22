@@ -104,8 +104,8 @@ public class Event {
      * @param description Full description for the event
      */
     public Event(final String name, final String type, final Date startDate,
-                 final String location, final Double longitude,
-                 final Double latitude, final String description) {
+                 final String location, final Double latitude,
+                 final Double longitude, final String description) {
         this.type = type;
         this.location = location;
         this.latitude = latitude;
@@ -170,15 +170,20 @@ public class Event {
      *
      * @param type        Type of event to create
      * @param location    Location of the created event
+     * @param latitude    Latitude of event if specified
+     * @param longitude   Longitude of event if specified
      * @param startDate   Date the event starts
      * @param name        Name of the Event
      * @param description Full description for the event
      */
     public Event(final String name, final String type, final Date startDate,
                  final Date creationDate, final String location,
+                 final Double latitude, final Double longitude,
                  final String description, final int likes, final int dislikes) {
         this.type = type;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.startDate = startDate;
         this.name = name;
         this.description = description;

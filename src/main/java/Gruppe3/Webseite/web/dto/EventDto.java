@@ -70,7 +70,7 @@ public class EventDto {
      */
     public EventDto(final String name, final String type, final Date startDate,
                     final Date creationDate, final String location,
-                    final Double longitude, final Double latitude,
+                    final Double latitude, final Double longitude,
                     final String description, final int likes, final int dislikes) {
         this.type = type;
         this.location = location;

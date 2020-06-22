@@ -4,8 +4,8 @@
 An event object consists of following values (java like types included for understanding of valid values):
  - String name
  - String location - only set this string if you dont want to save coordinates
- - Double longitude
  - Double latitude
+ - Double longitude
  - Date startDate
  - Date creationDate
  - String name

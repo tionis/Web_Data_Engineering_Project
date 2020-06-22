@@ -218,7 +218,7 @@ public class EventService {
         // Create Event
         Event eventToSave =
                 new Event(eName, eType, startDate,
-                        locationString, longitude, latitude, eDesc);
+                        locationString, latitude, longitude, eDesc);
         saveEvent(eventToSave);
     }
 
@@ -231,7 +231,7 @@ public class EventService {
     private EventDto convertEventToDto(final Event event) {
         return new EventDto(event.getName(), event.getType(),
                 event.getStartDate(), event.getCreationDate(),
-                event.getLocation(), event.getLongitude(), event.getLatitude()
+                event.getLocation(), event.getLatitude(), event.getLongitude()
                 , event.getDescription(), event.getLikes(), event.getDislikes());
     }
 

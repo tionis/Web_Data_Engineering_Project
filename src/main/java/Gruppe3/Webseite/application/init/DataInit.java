@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 @Component
 public class DataInit implements CommandLineRunner {
@@ -24,6 +26,11 @@ public class DataInit implements CommandLineRunner {
     private final boolean initEnabled = true;
 
     /**
+     * Random data source
+     */
+    private final Random rand;
+
+    /**
      * Initialize the application.
      *
      * @param eventService the service the initializer is created with
@@ -31,6 +38,7 @@ public class DataInit implements CommandLineRunner {
     @Autowired
     public DataInit(final EventService eventService) {
         this.eventService = eventService;
+        rand = new Random();
     }
 
     /**
@@ -43,11 +51,28 @@ public class DataInit implements CommandLineRunner {
         if (initEnabled) {
             String[] types = eventService.getTypes();
 
+            // Add normal example events
             for (int i = 0; i < types.length; i++) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date());
+                cal.add(Calendar.DATE, i);
+                Date startDate = cal.getTime();
                 eventService.saveEvent(
-                        new Event("Event" + (i + 1), types[i], new Date(),
-                                "Passau", "Beschreibung"));
+                        new Event("Event" + (i + 1), types[i],
+                                startDate, new Date(), "Munich",
+                                null, null, "Eine tolle Beschreibung",
+                                rand.nextInt(101), rand.nextInt(101)));
             }
+
+            // Add coordinate based example event
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, 4);
+            Date startDate = cal.getTime();
+            eventService.saveEvent(new Event("Presidential Party",
+                    types[0], startDate, new Date(), null,
+                    38.897957, -77.036560,
+                    "The best party maybe ever!", 100, 10));
         }
     }
 }
