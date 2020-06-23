@@ -121,7 +121,7 @@
                 await updateVote(false, true)
                 document.getElementById("like-button").className = "btn btn-outline-success btn-block";
                 currentVote = "";
-                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+                localStorage.removeItem("vote-" + [[${event.name}]]);
                 return;
             }
             if (currentVote === "dislike") {
@@ -143,7 +143,7 @@
                 await updateVote(false, false)
                 document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
                 currentVote = "";
-                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+                localStorage.removeItem("vote-" + [[${event.name}]]);
                 return;
             }
             if (currentVote === "like") {
