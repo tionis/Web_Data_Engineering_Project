@@ -103,7 +103,7 @@ public class EventService {
             }
             eventToEdit.setLikes(currentLikes - 1);
         } else {
-            int currentDislikes = eventToEdit.getLikes();
+            int currentDislikes = eventToEdit.getDislikes();
             if (currentDislikes <= 0) {
                 throw new InvalidVote("Vote would set likes below 0");
             }

@@ -35,7 +35,18 @@
 
         async function loadWeather() {
             let weatherElement = document.getElementById("weather");
-            let location = document.getElementById("location").innerText;
+            let city;
+            let isCoords;
+            let latitude;
+            let longitude;
+            if (!!document.getElementById("city")) {
+                city = document.getElementById("city").innerText;
+                isCoords = false;
+            } else {
+                isCoords = true;
+                latitude = document.getElementById("lat").innerText;
+                longitude = document.getElementById("long").innerText;
+            }
             let dateString = document.getElementById("date").innerText;
             let dateSplit = dateString.split(".");
             let year = dateSplit[2];
@@ -46,11 +57,10 @@
             DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
             if (date < DateInOneWeek) {
                 let url;
-                if (location.includes("|")) {
-                    let coords = location.split("|")
-                    url = "/api/location/search/?lattlong=" + coords[0] + "," + coords[1]
+                if (isCoords) {
+                    url = "/api/location/search/?lattlong=" + latitude + "," + longitude;
                 } else {
-                    url = "/api/location/search/?query=" + location;
+                    url = "/api/location/search/?query=" + city;
                 }
                 // Using proxy, as api we should use doesnt have a CORS Header
                 let response1 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com" + url)
@@ -70,18 +80,17 @@
                     return;
                 }
                 let weather = await response2.json();
-                //TODO
-                console.log("Weather Object:");
-                console.log(weather);
                 if (typeof weather == 'undefined') {
                     weatherError(weatherElement);
                     return;
                 }
-                if (typeof weather[0].weather_state_name == 'undefined') {
+                if (typeof weather[0].weather_state_abbr == 'undefined') {
                     weatherError(weatherElement);
                     return;
                 }
-                weatherElement.innerText = weather[0].weather_state_name;
+                let weatherShort = weather[0].weather_state_abbr;
+                let weatherHTML = "<img src=\"http://metaweather.com/static/img/weather/png/64/" + weatherShort + ".png\" title=\"" + weather[0].weather_state_name + "\">"
+                weatherElement.innerHTML = weatherHTML;
             } else {
                 console.log("Response was not ok, aborting further execution...")
                 weatherElement.innerText = "No weather available.";
@@ -96,6 +105,7 @@
         async function like() {
             if (currentVote === "like") {
                 showError("You already liked this!")
+                // TODO unlike
                 return;
             }
             if (currentVote === "dislike") {
@@ -112,6 +122,7 @@
         async function dislike() {
             if (currentVote === "dislike") {
                 showError("You already disliked this!")
+                // TODO undislike
                 return;
             }
             if (currentVote === "like") {
@@ -269,9 +280,16 @@
                 </div>
                 <div class="col">
                     <div id="location">
-                        <div id="city" th:if="${event.location} != null" th:text="${event.location}"></div>
-                        <div id="long" th:if="${event.longitude} != null" th:text="|Längengrad: ${event.longitude}|"></div>
-                        <div id="lat" th:if="${event.latitude} != null" th:text="|Breitengrad: ${event.latitude}|"></div>
+                        <div id="city" th:if="${event.location} != null"
+                             th:text="${event.location}"></div>
+                        <div id="lat-div" th:if="${event.latitude} != null">
+                            <div>Breitengrad:</div>
+                            <div id="lat" th:text="${event.latitude}"></div>
+                        </div>
+                        <div id="long-div" th:if="${event.longitude} != null">
+                            <div>Längengrad:</div>
+                            <div id="long" th:text="${event.longitude}"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -282,7 +300,7 @@
                 </div>
                 <div class="col">
                     <div id="weather">
-                        <img src="http://metaweather.com/static/img/weather/png/64/t.png">
+                        Loading weather...
                     </div>
                 </div>
             </div>
