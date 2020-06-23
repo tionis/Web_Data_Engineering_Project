@@ -264,13 +264,16 @@
                             class="font-weight-bold">Ort: </span>
                         <span th:text="${event.location}" id="location"></span>
                     </p>
-                    <p class="pb-4"><span
-                            class="font-weight-bold">Wetter: </span>
-                        <span id="weather"></span></p>
+                    <p class="pb-4">
+                        <span class="font-weight-bold">Wetter: </span>
+                        <span class="float-right" id="weather">
+                            <img src="http://metaweather.com/static/img/weather/png/64/t.png">
+                        </span>
+                    </p>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col text-center">
                     <button type="button" id="like-button" onclick="like()"
                             class="btn btn-outline-success btn-block">&#128077;
