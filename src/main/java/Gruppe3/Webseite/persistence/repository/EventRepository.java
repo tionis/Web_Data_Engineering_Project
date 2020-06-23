@@ -12,9 +12,8 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query(value = "SELECT * FROM event ORDER BY likes-dislikes DESC LIMIT :count", nativeQuery = true)
     Event[] getTopEvents(@Param("count") Integer count);
 
-    @Query(value = "SELECT * FROM event ORDER BY creation_date DESC LIMIT :count", nativeQuery = true)
+    @Query(value = "SELECT * FROM event WHERE START_DATE >= NOW() ORDER BY creation_date DESC LIMIT :count", nativeQuery = true)
     Event[] getLastEvents(@Param("count") Integer count);
-    // TODO only future events
 
     @Query(value = "SELECT * FROM event WHERE name LIKE :query", nativeQuery = true)
     Event[] searchAfterName(@Param("query") String query);
