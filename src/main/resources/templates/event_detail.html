@@ -269,9 +269,9 @@
                 </div>
                 <div class="col">
                     <div id="location">
-                        <span id="city"></span>
-                        <span id="long"></span>
-                        <span id="lat"></span>
+                        <div id="city" th:if="${event.location} != null" th:text="${event.location}"></div>
+                        <div id="long" th:if="${event.longitude} != null" th:text="|Längengrad: ${event.longitude}|"></div>
+                        <div id="lat" th:if="${event.latitude} != null" th:text="|Breitengrad: ${event.latitude}|"></div>
                     </div>
                 </div>
             </div>
