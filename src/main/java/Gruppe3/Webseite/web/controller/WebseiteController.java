@@ -93,12 +93,12 @@ public class WebseiteController {
      * @return The search result page.
      */
     @GetMapping("/search")
-    public String getSearch(@RequestParam(value = "q") Model model, String query) {
+    public String getSearch(Model model, @RequestParam(value = "q") String query) {
         EventDto[] locations = eventService.searchForEventAfterLocation(query);
         EventDto[] names = eventService.searchForEventAfterName(query);
-        model.addAttribute("location", locations);
-        model.addAttribute("name", names);
-        return "search_results";
+        model.addAttribute("locations", locations);
+        model.addAttribute("names", names);
+        return "search";
     }
 
     /**
