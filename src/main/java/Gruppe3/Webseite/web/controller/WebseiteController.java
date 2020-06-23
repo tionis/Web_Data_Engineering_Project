@@ -10,6 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @Controller
 public class WebseiteController {
     /**
@@ -45,6 +49,12 @@ public class WebseiteController {
     @GetMapping("/add")
     public String addEvent(final Model model) {
         String[] types = eventService.getTypes();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 1);
+        Date dateTomorrow = cal.getTime();
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        model.addAttribute("tomorrow", parser.format(dateTomorrow));
         model.addAttribute("types", types);
         return "add_event";
     }
