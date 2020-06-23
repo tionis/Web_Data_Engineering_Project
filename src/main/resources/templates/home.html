@@ -38,16 +38,19 @@
                 <!-- Searchbar -->
                 <div class="col-8">
                     <form action="/search" method="get">
-                        <input class="form-control form-control-lg bg-light"
-                               type="search" name="q" id="query"
-                               placeholder="Suchen...">
+                        <input class="form-control form-control-lg bg-light" type="search" name="q" id="query" placeholder="Suchen...">
                     </form>
                 </div>
 
                 <!-- Add_Event_Button -->
-                <div class="col-4 text-right">
+                <div class="col-4">
                     <button class="btn btn-primary btn-block btn-lg" type="button" onclick="location.href='/add';">
-                        Event hinzufügen
+                        <div class="d-none d-md-block">
+                            Event hinzufügen
+                        </div>
+                        <div class="d-md-none">
+                            +
+                        </div>
                     </button>
                 </div>
             </div>
