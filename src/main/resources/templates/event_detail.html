@@ -20,6 +20,9 @@
         const host = window.location.protocol + "//" + window.location.host;
         let currentVote = localStorage.getItem("vote-" + [[${event.name}]]);
 
+        /**
+         * Loads onLoad website functionality.
+         */
         async function load() {
             if (currentVote === "like") {
                 document.getElementById("like-button").className = "btn btn-success btn-block";
@@ -29,11 +32,14 @@
             try {
                 await loadWeather();
             } catch (error) {
-                console.log("Error while getting weather: ", error)
-                weatherError(document.getElementById("weather"))
+                weatherError()
             }
         }
 
+        /**
+         * Loads the relevant weather for date and location.
+         * @async
+         */
         async function loadWeather() {
             let weatherElement = document.getElementById("weather");
             let city;
@@ -66,47 +72,56 @@
                 // Using proxy, as api we should use doesnt have a CORS Header
                 let response1 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com" + url)
                 if (!response1.ok) {
-                    weatherError(weatherElement);
+                    weatherError();
                     return;
                 }
                 let result = await response1.json();
                 let woeid = result[0].woeid;
                 if (typeof woeid == 'undefined') {
-                    weatherError(weatherElement);
+                    weatherError();
                     return;
                 }
                 let response2 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
                 if (!response2.ok) {
-                    weatherError(weatherElement);
+                    weatherError();
                     return;
                 }
                 let weather = await response2.json();
                 if (typeof weather == 'undefined') {
-                    weatherError(weatherElement);
+                    weatherError();
                     return;
                 }
                 if (typeof weather[0].weather_state_abbr == 'undefined') {
-                    weatherError(weatherElement);
+                    weatherError();
                     return;
                 }
                 let weatherShort = weather[0].weather_state_abbr;
-                let weatherHTML = "<img src=\"http://metaweather.com/static/img/weather/png/64/" + weatherShort + ".png\" title=\"" + weather[0].weather_state_name + "\">"
-                weatherElement.innerHTML = weatherHTML;
+                weatherElement.innerHTML = "<img src=\"http://metaweather.com/static/img/weather/png/64/"
+                    + weatherShort + ".png\" alt=\"" + weather[0].weather_state_name
+                    + "\" title=\"" + weather[0].weather_state_name + "\">\n" + weather[0].weather_state_name;
             } else {
                 console.log("Response was not ok, aborting further execution...")
                 weatherElement.innerText = "No weather available.";
             }
         }
 
-        function weatherError(weatherElement) {
-            console.log("Error while getting weather!")
-            weatherElement.innerText = "Could not get weather for this location.\nPlease try again later.";
+        /**
+         * Outputs generic weather error.
+         */
+        function weatherError() {
+            document.getElementById("weather").innerText =
+                "Could not get weather for this location.\nPlease try again later.";
         }
 
+        /**
+         * Handles like button events.
+         */
         async function like() {
             if (currentVote === "like") {
-                showError("You already liked this!")
-                // TODO unlike
+                await updateVote(false, true)
+                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
+                currentVote = "";
+                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
                 return;
             }
             if (currentVote === "dislike") {
@@ -120,10 +135,15 @@
 
         }
 
+        /**
+         * Handles dislike button events.
+         */
         async function dislike() {
             if (currentVote === "dislike") {
-                showError("You already disliked this!")
-                // TODO undislike
+                await updateVote(false, false)
+                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
+                currentVote = "";
+                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
                 return;
             }
             if (currentVote === "like") {
@@ -136,6 +156,13 @@
             await updateVote(true, false)
         }
 
+        /**
+         * Sends a command to the server to apply the vote as specified in parameters to event.
+         *
+         * @param isAdd {Boolean} true if the vote should be added
+         * @param isVoteLike {Boolean} true if this vote is a like
+         * @returns {Promise<void>} dummy promise
+         */
         async function updateVote(isAdd, isVoteLike) {
             let endpoint = "/api/vote/add";
             if (isAdd === false) {
@@ -157,83 +184,7 @@
                 alert("Error processing your Vote!")
             }
         }
-
-        function showError(message) {
-            let x = document.getElementById("error-snackbar");
-            x.innerText = message;
-            x.className = "show";
-            setTimeout(function () {
-                x.className = x.className.replace("show", "");
-            }, 3000);
-        }
     </script>
-    <style>
-        #error-snackbar {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-        }
-
-        #error-snackbar.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-
-        @-webkit-keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-    </style>
     <title th:text="${event.name}"></title>
 </head>
 <body onload="load()">
@@ -268,16 +219,17 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="font-weight-bold">Datum: </div>
+                    <div class="font-weight-bold">Datum:</div>
                 </div>
                 <div class="col">
-                    <div th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}" id="date"></div>
+                    <div th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}"
+                         id="date"></div>
                 </div>
             </div>
 
             <div class="row pb-4">
                 <div class="col">
-                    <div class="font-weight-bold">Ort: </div>
+                    <div class="font-weight-bold">Ort:</div>
                 </div>
                 <div class="col">
                     <div id="location">
@@ -297,7 +249,7 @@
 
             <div class="row pb-4">
                 <div class="col">
-                    <div class="font-weight-bold">Wetter: </div>
+                    <div class="font-weight-bold">Wetter:</div>
                 </div>
                 <div class="col">
                     <div id="weather">
@@ -324,7 +276,6 @@
 
         </div>
     </div>
-    <div id="error-snackbar">Some text some message..</div>
 </div>
 </body>
 </html>
