@@ -1,7 +1,9 @@
 package Gruppe3.Webseite.persistence.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import java.util.Date;
 
 @Entity
@@ -16,6 +18,7 @@ public class Event {
      * Type of event this is.
      */
     private String type;
+
     /**
      * Location where the event takes place if no coordinates are specified.
      */
@@ -35,18 +38,23 @@ public class Event {
      * Date the event starts.
      */
     private Date startDate;
+
     /**
      * Date the event was created.
      */
     private Date creationDate;
+
     /**
      * Full Description of the event.
      */
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     /**
      * Amount of Dislikes of this event.
      */
     private int dislikes;
+
     /**
      * Amount of likes of this event.
      */

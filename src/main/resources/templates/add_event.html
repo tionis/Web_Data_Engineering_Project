@@ -59,9 +59,7 @@
             let url = encodeURI(document.forms["createEvent"]["eventName"].value);
             let host = window.location.protocol + "//" + window.location.host
             let response;
-            try {
-                response = await fetch(host + "/api/event/" + url);
-            }
+            response = await fetch(host + "/api/event/" + url);
             if (response.ok) {
                 nameValid = false;
                 document.forms["createEvent"]["eventName"].style = "color:red";
