@@ -2,17 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset= "utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-        <!-- jQuery include -->
+        <!-- Reference: https://getbootstrap.com/docs/4.0/examples/sticky-footer/ -->
+        <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            background-color: #f5f5f5;
+        }
+        </style>
+
+        <!-- jQuery, PopperJS and BootstrapJS include -->
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
-        <!-- Script for Website -->
-        <script type="text/javascript">
-
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
         <title>Suche</title>
     </head>
@@ -23,12 +33,12 @@
 
             <!-- Backbutton -->
             <div class="row pt-5 pb-5">
-                <div class="col">
+                <div class="col-10">
                     <button class="btn btn-link p-0" type="button"
                             onclick="location.href='/';">&larr; zurück zur Startseite
                     </button>
                 </div>
-
+                <div th:replace="home.html :: copyrightModal"></div>
             </div>
 
 
@@ -40,7 +50,7 @@
             </div>
 
             <!-- Search results -->
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-md">
                     <h2>Suche nach Namen</h2>
 
@@ -80,5 +90,6 @@
                 </div>
             </div>
         </div>
+        <footer th:replace="home.html :: footer"></footer>
     </body>
 </html>
