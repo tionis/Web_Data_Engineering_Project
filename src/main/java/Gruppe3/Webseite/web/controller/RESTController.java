@@ -1,6 +1,7 @@
 package Gruppe3.Webseite.web.controller;
 
 import Gruppe3.Webseite.application.exception.EventNameTaken;
+import Gruppe3.Webseite.application.exception.InvalidVote;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import Gruppe3.Webseite.application.service.EventService;
 import Gruppe3.Webseite.persistence.entities.Event;
@@ -121,7 +122,7 @@ public class RESTController {
             eventService.removeVote(vote);
             return ResponseEntity.ok(
                     eventService.getEventByName(vote.getEventName()));
-        } catch (NoSuchEvent e) {
+        } catch (NoSuchEvent | InvalidVote e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }

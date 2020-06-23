@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+
+    <!-- jQuery include -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+
+    <!-- Script for Website -->
+    <script type="text/javascript" th:inline="JavaScript">
+        const host = window.location.protocol + "//" + window.location.host;
+        let currentVote = localStorage.getItem("vote-" + [[${event.name}]]);
+
+        /**
+         * Loads onLoad website functionality.
+         */
+        async function load() {
+            if (currentVote === "like") {
+                document.getElementById("like-button").className = "btn btn-success btn-block";
+            } else if (currentVote === "dislike") {
+                document.getElementById("dislike-button").className = "btn btn-danger btn-block";
+            }
+            try {
+                await loadWeather();
+            } catch (error) {
+                weatherError()
+            }
+        }
+
+        /**
+         * Loads the relevant weather for date and location.
+         * @async
+         */
+        async function loadWeather() {
+            let weatherElement = document.getElementById("weather");
+            let city;
+            let isCoords;
+            let latitude;
+            let longitude;
+            if (!!document.getElementById("city")) {
+                city = document.getElementById("city").innerText;
+                isCoords = false;
+            } else {
+                isCoords = true;
+                latitude = document.getElementById("lat").innerText;
+                longitude = document.getElementById("long").innerText;
+            }
+            let dateString = document.getElementById("date").innerText;
+            let dateSplit = dateString.split(".");
+            let year = dateSplit[2];
+            let month = dateSplit[1];
+            let day = dateSplit[0];
+            let date = new Date(year, month - 1, day)
+            let DateInOneWeek = new Date;
+            DateInOneWeek.setDate(DateInOneWeek.getDate() + 7);
+            if (date < DateInOneWeek) {
+                let url;
+                if (isCoords) {
+                    url = "/api/location/search/?lattlong=" + latitude + "," + longitude;
+                } else {
+                    url = "/api/location/search/?query=" + city;
+                }
+                // Using proxy, as api we should use doesnt have a CORS Header
+                let response1 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com" + url)
+                if (!response1.ok) {
+                    weatherError();
+                    return;
+                }
+                let result = await response1.json();
+                let woeid = result[0].woeid;
+                if (typeof woeid == 'undefined') {
+                    weatherError();
+                    return;
+                }
+                let response2 = await fetch("https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/" + woeid + "/" + year + "/" + month + "/" + day + "/");
+                if (!response2.ok) {
+                    weatherError();
+                    return;
+                }
+                let weather = await response2.json();
+                if (typeof weather == 'undefined') {
+                    weatherError();
+                    return;
+                }
+                if (typeof weather[0].weather_state_abbr == 'undefined') {
+                    weatherError();
+                    return;
+                }
+                let weatherShort = weather[0].weather_state_abbr;
+                weatherElement.innerHTML = "<img src=\"http://metaweather.com/static/img/weather/png/64/"
+                    + weatherShort + ".png\" alt=\"" + weather[0].weather_state_name
+                    + "\" title=\"" + weather[0].weather_state_name + "\">\n" + weather[0].weather_state_name;
+            } else {
+                console.log("Response was not ok, aborting further execution...")
+                weatherElement.innerText = "No weather available.";
+            }
+        }
+
+        /**
+         * Outputs generic weather error.
+         */
+        function weatherError() {
+            document.getElementById("weather").innerText =
+                "Could not get weather for this location.\nPlease try again later.";
+        }
+
+        /**
+         * Handles like button events.
+         */
+        async function like() {
+            if (currentVote === "like") {
+                await updateVote(false, true)
+                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
+                currentVote = "";
+                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+                return;
+            }
+            if (currentVote === "dislike") {
+                await updateVote(false, false)
+                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
+            }
+            currentVote = "like";
+            document.getElementById("like-button").className = "btn btn-success btn-block";
+            localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+            await updateVote(true, true)
+
+        }
+
+        /**
+         * Handles dislike button events.
+         */
+        async function dislike() {
+            if (currentVote === "dislike") {
+                await updateVote(false, false)
+                document.getElementById("dislike-button").className = "btn btn-outline-danger btn-block";
+                currentVote = "";
+                localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+                return;
+            }
+            if (currentVote === "like") {
+                await updateVote(false, true)
+                document.getElementById("like-button").className = "btn btn-outline-success btn-block";
+            }
+            currentVote = "dislike";
+            document.getElementById("dislike-button").className = "btn btn-danger btn-block";
+            localStorage.setItem("vote-" + [[${event.name}]], currentVote);
+            await updateVote(true, false)
+        }
+
+        /**
+         * Sends a command to the server to apply the vote as specified in parameters to event.
+         *
+         * @param isAdd {Boolean} true if the vote should be added
+         * @param isVoteLike {Boolean} true if this vote is a like
+         * @returns {Promise<void>} dummy promise
+         */
+        async function updateVote(isAdd, isVoteLike) {
+            let endpoint = "/api/vote/add";
+            if (isAdd === false) {
+                endpoint = "/api/vote/remove";
+            }
+            let vote = {eventName: [[${event.name}]], isLike: isVoteLike};
+            let response = await fetch(host + endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(vote)
+            });
+            if (response.ok) {
+                let event = await response.json();
+                document.getElementById("likes").innerText = event.likes;
+                document.getElementById("dislikes").innerText = event.dislikes;
+            } else {
+                alert("Error processing your Vote!")
+            }
+        }
+    </script>
+    <title th:text="${event.name}"></title>
+</head>
+<body onload="load()">
+
+<!-- Site Container -->
+<div class="container">
+
+    <!-- Backbutton -->
+    <div class="row pt-5 pb-5">
+        <div class="col">
+            <button class="btn btn-link p-0" type="button"
+                    onclick="location.href='/';">&larr; zurück zur Startseite
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="row ">
+
+        <div class="col-md-8">
+            <h2 th:text="${event.name}">Name</h2>
+            <h4 class="pb-2" th:text="${event.type}">Typ</h4>
+
+            <p>
+                <span class="font-weight-bold">Beschreibung: </span>
+                <span th:text="${event.description}"></span>
+            </p>
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="row">
+                <div class="col">
+                    <div class="font-weight-bold">Datum:</div>
+                </div>
+                <div class="col">
+                    <div th:text="${#dates.format(event.startDate, 'dd.MM.yyyy')}"
+                         id="date"></div>
+                </div>
+            </div>
+
+            <div class="row pb-4">
+                <div class="col">
+                    <div class="font-weight-bold">Ort:</div>
+                </div>
+                <div class="col">
+                    <div id="location">
+                        <div id="city" th:if="${event.location} != null"
+                             th:text="${event.location}"></div>
+                        <div id="lat-div" th:if="${event.latitude} != null">
+                            <div>Breitengrad:</div>
+                            <div id="lat" th:text="${event.latitude}"></div>
+                        </div>
+                        <div id="long-div" th:if="${event.longitude} != null">
+                            <div>Längengrad:</div>
+                            <div id="long" th:text="${event.longitude}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pb-4">
+                <div class="col">
+                    <div class="font-weight-bold">Wetter:</div>
+                </div>
+                <div class="col">
+                    <div id="weather">
+                        Loading weather...
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col text-center">
+                    <button type="button" id="like-button" onclick="like()"
+                            class="btn btn-outline-success btn-block">&#128077;
+                    </button>
+                    <p th:text="${event.likes}" id="likes">#likes</p>
+                </div>
+                <div class="col text-center">
+                    <button type="button" id="dislike-button"
+                            onclick="dislike()"
+                            class="btn btn-outline-danger btn-block">&#128078;
+                    </button>
+                    <p th:text="${event.dislikes}" id="dislikes">#dislikes</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

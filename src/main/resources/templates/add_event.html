@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -19,6 +20,9 @@
         // Page Initialization
         let nameValid = false;
 
+        /**
+         * Validate the form before submitting.
+         */
         function validateForm() {
             // Check if name is valid
             if (!nameValid) {
@@ -47,12 +51,17 @@
             document.forms["createEvent"].submit();
         }
 
+        /**
+         * Check if event name is available.
+         * @returns {Promise<void>} Dummy promise
+         */
         async function checkNameAvailability() {
-            let urlName = encodeURI(document.forms["createEvent"]["eventName"].value);
-            let url = window.location.href;
-            let arr = url.split("/");
-            let host = arr[0] + "//" + arr[2];
-            let response = await fetch(host + "/api/event/" + urlName);
+            let url = encodeURI(document.forms["createEvent"]["eventName"].value);
+            let host = window.location.protocol + "//" + window.location.host
+            let response;
+            try {
+                response = await fetch(host + "/api/event/" + url);
+            }
             if (response.ok) {
                 nameValid = false;
                 document.forms["createEvent"]["eventName"].style = "color:red";
@@ -136,18 +145,18 @@
                            name="eLocation">
                     <div class="form-row">
                         <div class="col">
-                            <label for="longitude">Längengrad</label>
-                            <input type="number" min="-180" max="180"
-                                   step="0.0001" class="form-control"
-                                   id="longitude" name="eLongitude"
-                                   placeholder="Längengrad">
-                        </div>
-                        <div class="col">
                             <label for="latitude">Breitengrad</label>
                             <input type="number" min="-90" max="90"
                                    step="0.0001" class="form-control"
                                    id="latitude" name="eLatitude"
                                    placeholder="Breitengrad">
+                        </div>
+                        <div class="col">
+                            <label for="longitude">Längengrad</label>
+                            <input type="number" min="-180" max="180"
+                                   step="0.0001" class="form-control"
+                                   id="longitude" name="eLongitude"
+                                   placeholder="Längengrad">
                         </div>
                     </div>
                 </div>
