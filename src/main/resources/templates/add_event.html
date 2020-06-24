@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet"
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-              crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
 
-        <!-- Reference: https://getbootstrap.com/docs/4.0/examples/sticky-footer/ -->
-        <style>
+    <!-- Reference: https://getbootstrap.com/docs/4.0/examples/sticky-footer/ -->
+    <style>
         .footer {
             position: fixed;
             bottom: 0;
@@ -20,165 +20,169 @@
             line-height: 60px;
             background-color: #f5f5f5;
         }
-        </style>
+    </style>
 
-        <!-- jQuery, PopperJS and BootstrapJS include -->
-        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!-- jQuery, PopperJS and BootstrapJS include -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
 
-        <!-- Script for Website -->
-        <script type="text/javascript">
-            // Page Initialization
-            let nameValid = false;
+    <!-- Script for Website -->
+    <script type="text/javascript">
+        // Page Initialization
+        let nameValid = false;
 
-            /**
-             * Validate the form before submitting.
-             */
-            function validateForm() {
-                // Check if name is valid
-                if (!nameValid) {
-                    alert("Please choose an available event name!");
-                    return false;
-                }
-                // Check validity of event
-                const location = document.forms["createEvent"]["eventLocation"].value;
-                const latitude = document.forms["createEvent"]["latitude"].value;
-                const longitude = document.forms["createEvent"]["longitude"].value;
-                const date = document.forms["createEvent"]["eventDate"].value;
-                if (location && (latitude || longitude)) {
-                    alert("Please specify coordinates OR location name!");
-                    return false;
-                }
-                let now = new Date();
-                now.setHours(0, 0, 0, 0);
-                if (Date.parse(date) < now) {
-                    alert("Please specify a start date today or in the future!");
-                    return false;
-                }
-                if (!location && (!latitude && !longitude)) {
-                    alert("Please specify a location for the event")
-                    return false;
-                }
-                document.forms["createEvent"].submit();
+        /**
+         * Validate the form before submitting.
+         */
+        function validateForm() {
+            // Check if name is valid
+            if (!nameValid) {
+                alert("Please choose an available event name!");
+                return false;
             }
-
-            /**
-             * Check if event name is available.
-             * @returns {Promise<void>} Dummy promise
-             */
-            async function checkNameAvailability() {
-                let url = encodeURI(document.forms["createEvent"]["eventName"].value);
-                let host = window.location.protocol + "//" + window.location.host
-                let response;
-                try {
-                    response = await fetch(host + "/api/event/" + url);
-                }
-                if (response.ok) {
-                    nameValid = false;
-                    document.forms["createEvent"]["eventName"].style = "color:red";
-                } else {
-                    nameValid = true;
-                    document.forms["createEvent"]["eventName"].style = "color:green";
-                }
+            // Check validity of event
+            const location = document.forms["createEvent"]["eventLocation"].value;
+            const latitude = document.forms["createEvent"]["latitude"].value;
+            const longitude = document.forms["createEvent"]["longitude"].value;
+            const date = document.forms["createEvent"]["eventDate"].value;
+            if (location && (latitude || longitude)) {
+                alert("Please specify coordinates OR location name!");
+                return false;
             }
-        </script>
+            let now = new Date();
+            now.setHours(0, 0, 0, 0);
+            if (Date.parse(date) < now) {
+                alert("Please specify a start date today or in the future!");
+                return false;
+            }
+            if (!location && (!latitude && !longitude)) {
+                alert("Please specify a location for the event")
+                return false;
+            }
+            document.forms["createEvent"].submit();
+        }
 
-        <title>Event hinzufügen</title>
-    </head>
-    <body>
+        /**
+         * Check if event name is available.
+         * @returns {Promise<void>} Dummy promise
+         */
+        async function checkNameAvailability() {
+            let url = encodeURI(document.forms["createEvent"]["eventName"].value);
+            let host = window.location.protocol + "//" + window.location.host
+            let response;
+            response = await fetch(host + "/api/event/" + url);
+            if (response.ok) {
+                nameValid = false;
+                document.forms["createEvent"]["eventName"].style = "color:red";
+            } else {
+                nameValid = true;
+                document.forms["createEvent"]["eventName"].style = "color:green";
+            }
+        }
+    </script>
 
-        <!-- Site Container -->
-        <div class="container">
+    <title>Event hinzufügen</title>
+</head>
+<body>
 
-            <!-- Backbutton -->
-            <div class="row pt-5 pb-5">
-                <div class="col-10">
-                    <button class="btn btn-link p-0" type="button"
-                            onclick="location.href='/';">&larr; zurück zur Startseite
-                    </button>
-                </div>
-                <div th:replace="home.html :: copyrightModal"></div>
-            </div>
+<!-- Site Container -->
+<div class="container">
 
-            <!-- Subtitle -->
-            <div class="row">
-                <div class="col">
-                    <h2>Event hinzufügen</h2>
-                </div>
-
-            </div>
-
-            <!-- Form Container -->
-            <div class="row mb-5">
-                <div class="col">
-
-                    <!-- Form -->
-                    <form action="/" class="mt-4" name="createEvent" method="post"
-                          onsubmit="return validateForm()">
-                        <div class="form-group">
-                            <label for="eventType">Typ</label>
-
-                            <!-- Fragment for type selection -->
-                            <select class="form-control" id="eventType" name="eType">
-                                <option th:fragment="typeOptions"
-                                        th:each="type : ${types}" th:value="${type}"
-                                        th:text="${type}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="eventName">Name</label>
-                            <input type="text" class="form-control" id="eventName"
-                                   name="eName" oninput="checkNameAvailability()">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="eventDescription">Beschreibung</label>
-                            <textarea class="form-control" id="eventDescription"
-                                      rows="3" name="eDesc" required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="eventDate">Datum</label>
-
-                            <!-- Check with pattern if input is in the right date format -->
-                            <input class="form-control" type="date" id="eventDate"
-                                   pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])"
-                                   th:value="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
-                                   th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
-                                   name="eDate" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="eventLocation">Ort</label>
-                            <input type="text" class="form-control mb-2"
-                                   id="eventLocation" placeholder="Stadt"
-                                   name="eLocation">
-                            <div class="form-row">
-                                <div class="col">
-                                    <label for="latitude">Breitengrad</label>
-                                    <input type="number" min="-90" max="90"
-                                           step="0.0001" class="form-control"
-                                           id="latitude" name="eLatitude"
-                                           placeholder="Breitengrad">
-                                </div>
-                                <div class="col">
-                                    <label for="longitude">Längengrad</label>
-                                    <input type="number" min="-180" max="180"
-                                           step="0.0001" class="form-control"
-                                           id="longitude" name="eLongitude"
-                                           placeholder="Längengrad">
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-lg btn-block mt-5"
-                                type="submit">Hinzufügen
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <!-- Backbutton -->
+    <div class="row pt-5 pb-5">
+        <div class="col-10">
+            <button class="btn btn-link p-0" type="button"
+                    onclick="location.href='/';">&larr; zurück zur Startseite
+            </button>
         </div>
-        <footer th:replace="home.html :: footer"></footer>
-    </body>
+        <div th:replace="home.html :: copyrightModal"></div>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="row">
+        <div class="col">
+            <h2>Event hinzufügen</h2>
+        </div>
+
+    </div>
+
+    <!-- Form Container -->
+    <div class="row mb-5">
+        <div class="col">
+
+            <!-- Form -->
+            <form action="/" class="mt-4" name="createEvent" method="post"
+                  onsubmit="return validateForm()">
+                <div class="form-group">
+                    <label for="eventType">Typ</label>
+
+                    <!-- Fragment for type selection -->
+                    <select class="form-control" id="eventType" name="eType">
+                        <option th:fragment="typeOptions"
+                                th:each="type : ${types}" th:value="${type}"
+                                th:text="${type}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventName">Name</label>
+                    <input type="text" class="form-control" id="eventName"
+                           name="eName" oninput="checkNameAvailability()">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventDescription">Beschreibung</label>
+                    <textarea class="form-control" id="eventDescription"
+                              rows="3" name="eDesc" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventDate">Datum</label>
+
+                    <!-- Check with pattern if input is in the right date format -->
+                    <input class="form-control" type="date" id="eventDate"
+                           pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])"
+                           th:value="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                           th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                           name="eDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventLocation">Ort</label>
+                    <input type="text" class="form-control mb-2"
+                           id="eventLocation" placeholder="Stadt"
+                           name="eLocation">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="latitude">Breitengrad</label>
+                            <input type="number" min="-90" max="90"
+                                   step="0.0001" class="form-control"
+                                   id="latitude" name="eLatitude"
+                                   placeholder="Breitengrad">
+                        </div>
+                        <div class="col">
+                            <label for="longitude">Längengrad</label>
+                            <input type="number" min="-180" max="180"
+                                   step="0.0001" class="form-control"
+                                   id="longitude" name="eLongitude"
+                                   placeholder="Längengrad">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-lg btn-block mt-5"
+                        type="submit">Hinzufügen
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="home.html :: footer"></footer>
+</body>
 </html>
