@@ -212,18 +212,15 @@ public class EventService {
                     latitude = Double.parseDouble(eLatitude);
                     longitude = Double.parseDouble(eLongitude);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException(
-                            "Longitude or Latitude invalid.");
+                    throw new RuntimeException("Longitude or Latitude invalid.");
                 }
             } else {
-                throw new RuntimeException(
-                        "Only one of the coordinates specified");
+                throw new RuntimeException("Only one of the coordinates specified");
             }
         } else if (eLatitude.isEmpty() && eLongitude.isEmpty()) {
             locationString = eLocation;
         } else {
-            throw new RuntimeException(
-                    "Both location and coordinates specified");
+            throw new RuntimeException("Both location and coordinates specified");
         }
 
         // Create Event

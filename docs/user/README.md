@@ -3,7 +3,7 @@ Welcome the Event Management System of Group3&#8482;.
 This short guide will help you use the system efficiently:
 
 ## Basic Usage
-The home page shows you the last added events, as well as the Top Evens on the right.  
+The home page shows you the last added events(but only future ones), as well as the Top Evens on the right.  
 By using the selection menu under the search bar you can filter it after a specific type of event.
 In the top right events is a button to add events and with the search bar on the top of the page you can search for events after name and location.
 

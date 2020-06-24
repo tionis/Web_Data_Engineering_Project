@@ -2,7 +2,6 @@ package Gruppe3.Webseite.web.controller;
 
 import Gruppe3.Webseite.application.exception.EventNameTaken;
 import Gruppe3.Webseite.application.service.EventService;
-import Gruppe3.Webseite.persistence.entities.Event;
 import Gruppe3.Webseite.web.dto.EventDto;
 import Gruppe3.Webseite.application.exception.NoSuchEvent;
 import org.springframework.beans.factory.annotation.Autowired;
