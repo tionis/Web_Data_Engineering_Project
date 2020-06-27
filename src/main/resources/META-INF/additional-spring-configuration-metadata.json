@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "types",
+      "type": "java.lang.String",
+      "description": "Description for types."
+    },
+    {
+      "name": "init",
+      "type": "java.lang.Boolean",
+      "description": "Should the project be initialized with example data."
+    }
+  ]
+}
